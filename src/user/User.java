@@ -6,7 +6,7 @@ import java.util.Map;
 
 import chat.ChatBox;
 import wall.CommonWall;
-import wall.PersonalWall;
+import wall.IPersonalWall;
 import wall.Photo;
 import wall.Post;
 
@@ -24,11 +24,11 @@ public class User implements IUser{
 	//<email, user>
 	private Map<String, User> friends = new HashMap<String, User>();
 	private ChatBox chatBox;
-	private PersonalWall personalWall;
+	private IPersonalWall personalWall;
 	private CommonWall commonWall;
 	private Photo profilePicture;
 	//-----------------------------------
-	private IUserStatus userStatus;
+	private UserStatus userStatus;
 	
 	public User(char[] password, String email, String firstName, String lastName) {
 		super();
@@ -57,6 +57,9 @@ public class User implements IUser{
 	}
 	public void setProfilePicture(Photo profilePicture) {
 		this.profilePicture = profilePicture;
+	}
+	public ChatBox getChatBox() {
+		return chatBox;
 	}
 
 
@@ -136,7 +139,7 @@ public class User implements IUser{
 		
 	}
 
-
+/*
 	@Override
 	public void sendMessage(User friend, String message) {
 		// TODO Auto-generated method stub
@@ -149,4 +152,6 @@ public class User implements IUser{
 		// TODO Auto-generated method stub
 		
 	}
+*/
+
 }
