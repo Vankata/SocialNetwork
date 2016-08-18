@@ -13,6 +13,7 @@ public class UserStatus implements IUserStatus {
 	}
 	
 	//dobavqme go v sistemata pri registraciq
+	
 	@Override
 	public void addUser(User user){
 		

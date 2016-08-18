@@ -8,7 +8,7 @@ import user.User;
 public class Chat {
 
 	private User friend;
-	private Set<Message> massages = new TreeSet<Message>();
+	private Set<Message> messages = new TreeSet<Message>();
 
 	public void sendMessage(String meassage) {
 
