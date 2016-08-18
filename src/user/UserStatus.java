@@ -3,6 +3,10 @@ package user;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import user.exceptions.UserStatusException;
+import wall.Post;
 
 public class UserStatus implements IUserStatus {
 	Map<String, User> allUsers = new HashMap<String, User>();
@@ -30,6 +34,4 @@ public class UserStatus implements IUserStatus {
 	public List<User> searchUser(User user){
 		return null;
 	}
-	
-	
 }

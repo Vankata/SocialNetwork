@@ -7,7 +7,7 @@ import java.util.Map;
 import chat.ChatBox;
 import user.exceptions.UserException;
 import wall.CommonWall;
-import wall.PersonalWall;
+import wall.IPersonalWall;
 import wall.Photo;
 import wall.Post;
 
@@ -25,9 +25,10 @@ public class User implements IUser {
 	// <email, user>
 	private Map<String, User> friends;
 	private ChatBox chatBox;
-	private PersonalWall personalWall;
+	private IPersonalWall personalWall;
 	private CommonWall commonWall;
 	private Photo profilePicture;
+
 	// -----------------------------------
 	private UserStatus userStatus;
 
@@ -107,6 +108,7 @@ public class User implements IUser {
 		if (birthdayDate == null) {
 			throw new UserException("Invalid input for BirthDay");
 		}
+
 		this.birthdayDate = birthdayDate;
 	}
 
@@ -115,6 +117,9 @@ public class User implements IUser {
 			throw new UserException("Cant set this photo as profile picture");
 		}
 		this.profilePicture = profilePicture;
+	}
+	public ChatBox getChatBox() {
+		return chatBox;
 	}
 
 	@Override
@@ -181,17 +186,8 @@ public class User implements IUser {
 	public void logout() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void sendMessage(User friend, String message) {
-		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void reviewChat(User friend) {
-		// TODO Auto-generated method stub
 
-	}
 }

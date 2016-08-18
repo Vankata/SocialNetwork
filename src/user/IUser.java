@@ -30,7 +30,7 @@ public interface IUser {
 	public abstract void logout();
 	//---------------------------------------
 	//prashtame syobshtenie
-	public abstract void sendMessage(User friend, String message);
+	//public abstract void sendMessage(User friend, String message);
 	//preglejdame chata s nqkoi
-	public abstract void reviewChat(User friend);
+	//public abstract void reviewChat(User friend);
 }
