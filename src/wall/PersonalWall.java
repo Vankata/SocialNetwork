@@ -12,6 +12,8 @@ public class PersonalWall implements IPersonalWall {
 	public PersonalWall() {
 		
 	}
+	
+	
 
 	@Override
 	public void addPost(Post post) throws WallException {

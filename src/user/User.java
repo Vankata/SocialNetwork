@@ -2,8 +2,13 @@ package user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import chat.Chat;
@@ -16,6 +21,7 @@ import wall.IPersonalWall;
 import wall.PersonalWall;
 import wall.Photo;
 import wall.Post;
+import wall.exceptions.WallException;
 
 public class User implements IUser {
 	// zadyljitelno pri registraciq
@@ -30,8 +36,9 @@ public class User implements IUser {
 	// -------------------------
 	// <email, user>
 	private Map<String, User> friends = new HashMap<String, User>();
-	private Map<User, Chat> chats = new TreeMap<User, Chat>((user1, user2) -> user1.getEmail().compareTo(user2.getEmail()));
-	private IPersonalWall personalWall;
+	private Map<User, Chat> chats = new TreeMap<User, Chat>(
+			(user1, user2) -> user1.getEmail().compareTo(user2.getEmail()));
+	private PersonalWall personalWall;
 	private CommonWall commonWall;
 	private Photo profilePicture;
 
@@ -41,17 +48,17 @@ public class User implements IUser {
 	public User(String password, String email, String firstName, String lastName, UserStatus userStatus)
 			throws UserException {
 
-		setPassword(password);
-		setEmail(email);
-		setFirstName(firstName);
-		setLastName(lastName);
+		this.setPassword(password);
+		this.setEmail(email);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
 
-		friends = new HashMap<String, User>();
-		personalWall = new PersonalWall();
-		commonWall = new CommonWall();
+		this.friends = new HashMap<String, User>();
+		this.personalWall = new PersonalWall();
+		this.commonWall = new CommonWall();
 
 	}
-	
+
 	private void setEmail(String email) throws UserException {
 		if (email == null || email.length() == 0) {
 			throw new UserException("You are trying to set an immaginary email");
@@ -124,19 +131,70 @@ public class User implements IUser {
 		}
 		this.profilePicture = profilePicture;
 	}
-	
-	public void addNewChat( User friend, Chat newChat) throws UserException{
-		
-		if(newChat != null){
+
+	public void addNewChat(User friend, Chat newChat) throws UserException {
+
+		if (newChat != null) {
 			this.chats.put(friend, newChat);
-		}else{
+		} else {
 			throw new UserException("Invalid chat! ");
 		}
 	}
 
+	
+	// Should be private and not in the interface/
+	// friendsWithThisName() will be in the interface and the friend will be
+	// find by name
+	private void likePost(User friend, Post post) { // increment the number likes
+													// for this post
+
+		/*
+		 * Namirame post v postovete na uzyra i mi inkrementirame broq na
+		 * laikovete. dobavqme imeto na uzyra koito haresva post v imenata na
+		 * horata koito sa go haresali postovete v klas stena sa treeset i nama
+		 * random dostyp to tqh. Moje bi trqbwa da gi pazim v arraylist
+		 */
+
+	}
 	@Override
-	public void likePost(User friend, Post post) {
-		// TODO Auto-generated method stub
+	public void likeFriendsPost(String friendName, Post post) throws UserException {
+
+		if (post == null /*
+							 * validacia za imeto. She izpolzvame metoda za
+							 * validaciq na string ot Geri
+							 */) {
+			throw new UserException("You are trying  to like a post with invalid friend name or post");
+		}
+
+		List<User> friendsWithThisName = new ArrayList<User>();
+
+		// Finds all friends that have friendName among their first or last
+		// names and adds them in the friendsWithThisName Set
+		for (Entry<String, User> entry : friends.entrySet()) {
+			if (entry.getValue().getFirstName().equals(friendName)
+					|| entry.getValue().getLastName().equals(friendName)) {
+				friendsWithThisName.add(entry.getValue());
+			}
+		}
+		// ---------------------------------------------------------------------
+
+		if (friendsWithThisName.size() == 0) {
+			// Moje i da ne hvyrlq exception a samo da izkarkva nadpis. Za sega
+			// go ostawqm taka za testovi celi
+			throw new UserException("U does not have friend with name " + friendName);
+		}
+
+		// Multiple matches
+		if (friendsWithThisName.size() > 1) {
+
+			for (User friend : friendsWithThisName) {
+				System.out.println(friend.getFirstName() + " " + friend.getLastName());
+			}
+			throw new UserException("U have more than one frined with this name. Please be more Specific");
+		}
+
+		// Get index 0, cuz we are sure that only one obj is in the arraylist
+		this.likePost(friendsWithThisName.get(0), post);
 
 	}
 
@@ -147,8 +205,10 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void deletePost(Post post) {
-		// TODO Auto-generated method stub
+	public void deletePost(Post post) throws UserException {
+		if (post == null) {
+			throw new UserException("Invalid Post to delete!");
+		}
 
 	}
 
@@ -159,34 +219,44 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void addPost(Post post) {
-		// TODO Auto-generated method stub
+	public void addPost(Post post) throws UserException {
+		// if (post == null) {
+		// throw new UserException("Invalid post to add");
+		// }
+
+		try {
+			this.personalWall.addPost(post);
+		} catch (WallException e) {
+			// TODO Auto-generated catch block
+			throw new UserException(e.getMessage(), e);
+		}
 
 	}
 
 	@Override
 	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
-		//VANKATA: promenqm malko, realiziram chata2
-		if(!this.friends.containsValue(user)){
+		// VANKATA: promenqm malko, realiziram chata2
+		if (!this.friends.containsValue(user)) {
 			this.friends.put(user.getEmail(), user);
 		}
-		if(!user.hasThisFriend(this)){
+		if (!user.hasThisFriend(this)) {
 			user.addFriend(this);
 		}
 		Chat chat = new Chat();
 		this.addNewChat(user, chat);
 		user.addNewChat(this, chat);
 	}
-	
-	//VANKATA dobavqm tozi metod
-	public boolean hasThisFriend(User user) throws UserException{
-		if(user != null){
-			if(this.friends.containsValue(user)){
+
+	// VANKATA dobavqm tozi metod
+	//Tyrsim po obekt ot tip user
+	public boolean hasThisFriend(User user) throws UserException {
+		if (user != null) {
+			if (this.friends.containsValue(user)) {
 				return true;
 			}
 			return false;
-		}else{
+		} else {
 			throw new UserException("Invalid user! ");
 		}
 	}
@@ -211,14 +281,22 @@ public class User implements IUser {
 
 	@Override
 	public void deleteProfile(String password, String email) {
-		// TODO Auto-generated method stub
+
+		// Validation
+
+		if (password.equals(this.password) && email.equals(this.email)) {
+			this.userStatus.removeUser(this);
+			// We need to set all references of this user to null(set this user
+			// to null in his friends, friend's list)
+		} else {
+			System.out.println("Invalid password or email. The profile hasn't been deleted");
+		}
 
 	}
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-
+		System.out.println(this.firstName + " " + this.lastName + "logged out");
 
 	}
 
@@ -236,18 +314,18 @@ public class User implements IUser {
 
 	@Override
 	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
-		if(this.friends.containsKey(friend.getEmail())){
+		if (this.friends.containsKey(friend.getEmail())) {
 			this.getChatbyUser(friend).addMessage(message);
-		}else{
+		} else {
 			throw new UserException("Invalid friend! ");
 		}
-		
+
 	}
-	
-	private Chat getChatbyUser(User friend) throws UserException{
-		if(this.chats.containsKey(friend)){
-			return this.chats.get(friend);		
-		}else{
+
+	private Chat getChatbyUser(User friend) throws UserException {
+		if (this.chats.containsKey(friend)) {
+			return this.chats.get(friend);
+		} else {
 			throw new UserException("Invalid friend! ");
 		}
 	}
@@ -256,6 +334,5 @@ public class User implements IUser {
 	public void reviewChat(User friend) throws UserException {
 		this.getChatbyUser(friend).printChat();
 	}
-
 
 }
