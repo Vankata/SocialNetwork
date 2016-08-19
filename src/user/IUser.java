@@ -1,5 +1,9 @@
 package user;
 
+import chat.exceptions.ChatBoxException;
+import chat.exceptions.ChatException;
+import chat.exceptions.MessageException;
+import user.exceptions.UserException;
 import wall.Post;
 
 public interface IUser {
@@ -16,7 +20,7 @@ public interface IUser {
 	public abstract void addPost(Post post);
 	//---------------------------------------
 	//proverqvame dali syshtestvuva v userStatus i dali veche go imame 
-	public abstract void addFriend(User user);
+	public abstract void addFriend(User user) throws UserException, ChatBoxException;
 	//proverqvame dali go imame v priqteli
 	public abstract void removeFirend(User user);
 	//pokazva infoto na friend
@@ -30,7 +34,7 @@ public interface IUser {
 	public abstract void logout();
 	//---------------------------------------
 	//prashtame syobshtenie
-	public abstract void sendMessage(User friend, String message);
+	public abstract void sendMessage(User friend, String message) throws ChatException, MessageException, UserException;
 	//preglejdame chata s nqkoi
-	public abstract void reviewChat(User friend);
+	public abstract void reviewChat(User friend) throws UserException;
 }

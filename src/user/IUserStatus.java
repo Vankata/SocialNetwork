@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IUserStatus {
 
-	boolean containsUser(String email);
+	boolean containsUser(User user);
 
 	//dobavqme go v sistemata pri registraciq
 	void addUser(User user);
