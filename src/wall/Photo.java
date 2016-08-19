@@ -17,12 +17,13 @@ public class Photo extends Post {
 		}
 	}
 
+	//Only for test
 	@Override
 	public String toString() {
 		System.out.println(super.toString());
 		return "Photo [pathToThePhoto=" + pathToThePhoto + "]";
 	}
-
+	//-----------------------
 	
 
 }

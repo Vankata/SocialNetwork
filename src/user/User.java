@@ -1,13 +1,19 @@
 package user;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
-import chat.ChatBox;
+import chat.Chat;
+import chat.exceptions.ChatBoxException;
+import chat.exceptions.ChatException;
+import chat.exceptions.MessageException;
 import user.exceptions.UserException;
 import wall.CommonWall;
 import wall.IPersonalWall;
+import wall.PersonalWall;
 import wall.Photo;
 import wall.Post;
 
@@ -23,13 +29,13 @@ public class User implements IUser {
 	private LocalDate birthdayDate;
 	// -------------------------
 	// <email, user>
-	private Map<String, User> friends;
-	private ChatBox chatBox;
+	private Map<String, User> friends = new HashMap<String, User>();
+	private Map<User, Chat> chats = new TreeMap<User, Chat>((user1, user2) -> user1.getEmail().compareTo(user2.getEmail()));
 	private IPersonalWall personalWall;
 	private CommonWall commonWall;
 	private Photo profilePicture;
 
-	// -----------------------------------
+	// ----------------------------------
 	private UserStatus userStatus;
 
 	public User(String password, String email, String firstName, String lastName, UserStatus userStatus)
@@ -45,7 +51,7 @@ public class User implements IUser {
 		commonWall = new CommonWall();
 
 	}
-
+	
 	private void setEmail(String email) throws UserException {
 		if (email == null || email.length() == 0) {
 			throw new UserException("You are trying to set an immaginary email");
@@ -118,8 +124,14 @@ public class User implements IUser {
 		}
 		this.profilePicture = profilePicture;
 	}
-	public ChatBox getChatBox() {
-		return chatBox;
+	
+	public void addNewChat( User friend, Chat newChat) throws UserException{
+		
+		if(newChat != null){
+			this.chats.put(friend, newChat);
+		}else{
+			throw new UserException("Invalid chat! ");
+		}
 	}
 
 	@Override
@@ -153,9 +165,30 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void addFriend(User user) {
+	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
-
+		//VANKATA: promenqm malko, realiziram chata
+		if(!this.friends.containsValue(user)){
+			this.friends.put(user.getEmail(), user);
+		}
+		if(!user.hasThisFriend(this)){
+			user.addFriend(this);
+		}
+		Chat chat = new Chat();
+		this.addNewChat(user, chat);
+		user.addNewChat(this, chat);
+	}
+	
+	//VANKATA dobavqm tozi metod
+	public boolean hasThisFriend(User user) throws UserException{
+		if(user != null){
+			if(this.friends.containsValue(user)){
+				return true;
+			}
+			return false;
+		}else{
+			throw new UserException("Invalid user! ");
+		}
 	}
 
 	@Override
@@ -187,6 +220,41 @@ public class User implements IUser {
 		// TODO Auto-generated method stub
 
 
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	@Override
+	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
+		if(this.friends.containsKey(friend.getEmail())){
+			this.getChatbyUser(friend).addMessage(message);
+		}else{
+			throw new UserException("Invalid friend! ");
+		}
+		
+	}
+	
+	private Chat getChatbyUser(User friend) throws UserException{
+		if(this.chats.containsKey(friend)){
+			return this.chats.get(friend);		
+		}else{
+			throw new UserException("Invalid friend! ");
+		}
+	}
+
+	@Override
+	public void reviewChat(User friend) throws UserException {
+		this.getChatbyUser(friend).printChat();
 	}
 
 

@@ -19,4 +19,13 @@ public class Message {
 		
 		this.timeOfTheMessage = LocalDateTime.now();
 	}
+
+	public LocalDateTime getTimeOfTheMessage() {
+		return timeOfTheMessage;
+	}
+
+	@Override
+	public String toString() {
+		return "Message [timeOfTheMessage=" + timeOfTheMessage + ", message=" + message + "]";
+	}
 }

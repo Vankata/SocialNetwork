@@ -1,33 +1,44 @@
 package chat;
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
+import chat.exceptions.MessageException;
 import user.User;
 
 public class Chat {
 
-	private String nameOfCreator;
-	private User friend;
-<<<<<<< HEAD
-	private Set<Message> massages = new TreeSet<Message>();
+	private LocalDateTime timeOfLastMessage;
+	private List<Message> messages = new LinkedList<Message>();
 	
-	public Chat(User friend, String nameOfCreator) throws ChatException, ChatBoxException {
-		//proverkata dali tozi user e v priqtelite na choveka 
-		//pravim kogato izvikvame sendMessage na usera
-		if(friend != null && nameOfCreator != null && nameOfCreator.trim().length() > 0){
-			this.friend = friend;
-			this.friend.getChatBox().addNewChat(nameOfCreator, this);
+	public Chat() {
+		this.timeOfLastMessage = LocalDateTime.now();
+	}
+
+
+	public void addMessage(String text) throws ChatException, MessageException {
+		if(text != null && text.trim().length() > 0){
+			Message newMessage = new Message(text);
+			this.messages.add(newMessage);
+			this.timeOfLastMessage = newMessage.getTimeOfTheMessage();
 		}else{
-			throw new ChatException("Invalid friend! ");
+			throw new ChatException("Invalid message! ");
 		}
 	}
->>>>>>> 0d96b3b75c679fba6970ef2535d5b5c4d5d159d9
 
-	public void sendMessage(String meassage) {
-		
+	public void printChat(){
+		for (Message message : messages) {
+			System.out.println(message);
+		}
+	}
+
+	public LocalDateTime getTimeOfLastMessage() {
+		return timeOfLastMessage;
 	}
 
 }
