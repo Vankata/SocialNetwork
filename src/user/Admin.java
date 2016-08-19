@@ -1,14 +1,13 @@
 package user;
 
-import user.exceptions.UserException;
 import wall.Post;
 
 public class Admin extends User implements IAdmin {
 	
 	//private UserStatus userStatus;
 	
-	public Admin(String password, String email, String firstName, String lastName, UserStatus status) throws UserException {
-		super(password, email, firstName, lastName, status);
+	public Admin(String password, String email, String firstName, String lastName) {
+		super(password, email, firstName, lastName);
 	}
 
 	@Override
