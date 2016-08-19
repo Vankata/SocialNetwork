@@ -1,7 +1,5 @@
 package wall;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -9,16 +7,18 @@ import wall.exceptions.WallException;
 
 public class PersonalWall implements IPersonalWall {
 
-	private Queue<Post> posts = new LinkedList<Post>();
+	private Set<Post> posts = new TreeSet<Post>();
 
 	public PersonalWall() {
 		
 	}
+	
+	
 
 	@Override
 	public void addPost(Post post) throws WallException {
 		if (post != null) {
-			this.posts.offer(post);
+			this.posts.add(post);
 		} else {
 			throw new WallException("Invalid post! ");
 		}
