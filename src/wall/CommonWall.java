@@ -32,7 +32,7 @@ public class CommonWall extends Wall {
 
 	public void addPost(Post post) throws WallException {
 		if (post != null) {
-			this.posts.add(post);
+			this.posts.offer(post);
 			this.update();
 		} else {
 			throw new WallException("Invalid post! ");

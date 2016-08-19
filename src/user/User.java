@@ -167,7 +167,7 @@ public class User implements IUser {
 	@Override
 	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
-		//VANKATA: promenqm malko, realiziram chata
+		//VANKATA: promenqm malko, realiziram chata2
 		if(!this.friends.containsValue(user)){
 			this.friends.put(user.getEmail(), user);
 		}
