@@ -59,6 +59,10 @@ public class User implements IUser {
 
 	}
 
+	boolean chekPassword(String password){
+		return this.password.equals(password);
+	}
+
 	private void setEmail(String email) throws UserException {
 		if (email == null || email.length() == 0) {
 			throw new UserException("You are trying to set an immaginary email");
