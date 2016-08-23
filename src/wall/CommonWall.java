@@ -22,28 +22,13 @@ import wall.exceptions.WallException;
 public class CommonWall extends Wall {
 
 	private static final int CAPACITY_POSTS = 30;
-	private Queue<Post> posts = new LinkedList<Post>();
 
-	private void update() {
-		if(this.posts.size() > CAPACITY_POSTS){
-			this.posts.poll();
-		}
-	}
+	@Override
+	protected void update() {
 
-	public void addPost(Post post) throws WallException {
-		if (post != null) {
-			this.posts.offer(post);
-			this.update();
-		} else {
-			throw new WallException("Invalid post! ");
-		}
-	}
+		if (this.posts.size() > CAPACITY_POSTS) {
+			this.posts.remove(posts.size() - 1);
 
-	public void removePost(Post post) throws WallException {
-		if (post != null && this.posts.contains(post)) {
-			this.posts.remove(post);
-		} else {
-			throw new WallException("Invalid post! ");
 		}
 	}
 

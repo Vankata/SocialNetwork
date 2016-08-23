@@ -13,14 +13,15 @@ public class Demo {
 	public static void main(String[] args) {
 		
 		try {
-			Post firstPost = new Post("kvo stava be");
-			System.out.println(firstPost);
-			Photo firstPhoto = new Photo("tova e pyrvata mi snimka", "https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg");
-			System.out.println(firstPhoto);
+		
 			
 			UserStatus system = new UserStatus();
 			User vankata = new User("abcd1234", "vancyki@abv.bg", "Ivan", "Kolev", system);
 			User troqn = new User("1234abcd", "bojinkata@abv.bg", "Bojin", "Penchev", system);
+			Post firstPost = new Post("kvo stava be",vankata);
+			System.out.println(firstPost);
+			Photo firstPhoto = new Photo("tova e pyrvata mi snimka", "https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg",troqn);
+			System.out.println(firstPhoto);
 			vankata.addFriend(troqn);
 			vankata.sendMessage(troqn, "Mara we");
 			Thread.sleep(3000);

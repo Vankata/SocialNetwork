@@ -12,7 +12,7 @@ import wall.exceptions.WallException;
 public interface IUser {
 	// mojem da haresvame samo na drugite
 
-	public abstract void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException;
+	public abstract void likePost(Post post) throws UserException, WallException, PostException;
 
 	// mojem da kometirame na drugite i na nas
 	public abstract void commentPost(Post post, String comment) throws PostException, UserException;
@@ -22,26 +22,25 @@ public interface IUser {
 	public abstract void deletePost(Post post) throws UserException, WallException;
 
 	// mojem da reportvame samo postove na priqteli
-	//public abstract void reportPost(User friend, Post post);
+	// public abstract void reportPost(User friend, Post post);
 
-	// dobavqme snimka na stenata
-	public abstract void postPicture(String picturePath) throws UserException, PostException, PhotoException, WallException;
 
-	//dobavqme snimka s text na stenata
-	public abstract void postPictureWithText(String pathToThePhoto, String text) throws UserException, PostException, PhotoException, WallException;
-	
-	//dobavqme text na stenata
-	public abstract void postText(String text) throws UserException, PostException, PhotoException, WallException;
-	
+
+	// dobavqme snimka s text na stenata
+	public abstract void postPicture(String pathToThePhoto, String text)
+			throws UserException, PostException, PhotoException, WallException;
+
+
+
 	// ---------------------------------------
 	// proverqvame dali syshtestvuva v userStatus i dali veche go imame
 	public abstract void addFriend(User user) throws UserException, ChatBoxException;
 
 	// proverqvame dali go imame v priqteli
-	public abstract void removeFirend(User user);
+	public abstract String removeFirend(User user) throws UserException;
 
 	// pokazva infoto na friend
-	public abstract void reviewFriendInfo(User friend);
+	public abstract String reviewFriendInfo(User friend) throws UserException;
 
 	// pokazva stenata na friend
 	public abstract void reviewFriendWall(User firend);

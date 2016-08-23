@@ -1,34 +1,35 @@
 package wall;
 
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
 
-import javax.print.attribute.standard.RequestingUserName;
+import java.util.LinkedList;
+import java.util.List;
+
 
 import wall.exceptions.WallException;
 
 public abstract class Wall {
-	
-	private Set<Post> posts = new TreeSet<Post>((o1, o2) -> o1.getTimeOfThePost().compareTo(o2.getTimeOfThePost()));
-	//komperatori
-	
-	public Wall(){
-		
+	private static final int CAPACITY_POSTS = 20;
+	protected  List<Post> posts = new LinkedList<Post>();
+
+	protected void update() {
+		if(this.posts.size() > CAPACITY_POSTS){
+			this.posts.remove(posts.size() - 1);
+		}
 	}
-	
-    public void addPost(Post post) throws WallException{
-    	if(post != null){
-    		this.posts.add(post);
-    	}else{
-    		throw new WallException("Invalid post! ");
-    	}
+
+	public void addPost(Post post) throws WallException {
+		if (post != null) {
+			this.posts.add(0,post);
+			this.update();
+		} else {
+			throw new WallException("Invalid post! ");
+		}
 	}
-	
-	public void removePost(Post post) throws WallException{
-		if(post != null && this.posts.contains(post)){
+
+	public void removePost(Post post) throws WallException {
+		if (post != null && this.posts.contains(post)) {
 			this.posts.remove(post);
-		}else{
+		} else {
 			throw new WallException("Invalid post! ");
 		}
 	}

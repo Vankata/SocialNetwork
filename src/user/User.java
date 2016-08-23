@@ -45,7 +45,7 @@ public class User implements IUser {
 	private Photo profilePicture;
 
 	// ----------------------------------
-	private UserStatus userStatus;
+	protected UserStatus userStatus;
 
 	public User(String password, String email, String firstName, String lastName, UserStatus userStatus)
 			throws UserException {
@@ -147,65 +147,58 @@ public class User implements IUser {
 		}
 	}
 
-	// Should be private and not in the interface/
-	// friendsWithThisName() will be in the interface and the friend will be
-	// find by name
-	private void likePost(Post post) throws WallException, PostException, UserException {
+	public void likePost(Post post) throws WallException, PostException, UserException {
 
-		if(post != null){
+		if (post != null) {
 			post.addLike(this.getFirstName() + " " + this.getLastName());
-		}else{
+		} else {
 			throw new UserException("Invalid post! ");
 		}
 	}
 
 	/*
-	@Override
-	public void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException {
+	 * @Override public void likeFriendsPost(String friendName, Post post)
+	 * throws UserException, WallException, PostException {
+	 * 
+	 * if (post == null || !isStringValid(friendName)) { throw new
+	 * UserException("You are trying  to like a post with invalid friend name or post"
+	 * ); }
+	 * 
+	 * List<User> friendsWithThisName = new ArrayList<User>();
+	 * 
+	 * // Finds all friends that have friendName among their first or last //
+	 * names and adds them in the friendsWithThisName Set for (Entry<String,
+	 * User> entry : friends.entrySet()) { if
+	 * (entry.getValue().getFirstName().equals(friendName) ||
+	 * entry.getValue().getLastName().equals(friendName)) {
+	 * friendsWithThisName.add(entry.getValue()); } } //
+	 * ---------------------------------------------------------------------
+	 * 
+	 * if (friendsWithThisName.size() == 0) { // Moje i da ne hvyrlq exception a
+	 * samo da izkarkva nadpis. Za sega // go ostawqm taka za testovi celi throw
+	 * new UserException("U does not have friend with name " + friendName); }
+	 * 
+	 * // Multiple matches if (friendsWithThisName.size() > 1) {
+	 * 
+	 * for (User friend : friendsWithThisName) {
+	 * System.out.println(friend.getFirstName() + " " + friend.getLastName()); }
+	 * throw new
+	 * UserException("U have more than one frined with this name. Please be more Specific"
+	 * ); }
+	 * 
+	 * // Get index 0, cuz we are sure that only one obj is in the arraylist
+	 * this.likePost(friendsWithThisName.get(0), post);
+	 * 
+	 * }
+	 * 
+	 */
 
-		if (post == null || !isStringValid(friendName)) {
-			throw new UserException("You are trying  to like a post with invalid friend name or post");
-		}
-
-		List<User> friendsWithThisName = new ArrayList<User>();
-
-		// Finds all friends that have friendName among their first or last
-		// names and adds them in the friendsWithThisName Set
-		for (Entry<String, User> entry : friends.entrySet()) {
-			if (entry.getValue().getFirstName().equals(friendName)
-					|| entry.getValue().getLastName().equals(friendName)) {
-				friendsWithThisName.add(entry.getValue());
-			}
-		}
-		// ---------------------------------------------------------------------
-
-		if (friendsWithThisName.size() == 0) {
-			// Moje i da ne hvyrlq exception a samo da izkarkva nadpis. Za sega
-			// go ostawqm taka za testovi celi
-			throw new UserException("U does not have friend with name " + friendName);
-		}
-
-		// Multiple matches
-		if (friendsWithThisName.size() > 1) {
-
-			for (User friend : friendsWithThisName) {
-				System.out.println(friend.getFirstName() + " " + friend.getLastName());
-			}
-			throw new UserException("U have more than one frined with this name. Please be more Specific");
-		}
-
-		// Get index 0, cuz we are sure that only one obj is in the arraylist
-		this.likePost(friendsWithThisName.get(0), post);
-
-	}
-
-*/
 	@Override
 	public void commentPost(Post post, String comment) throws PostException, UserException {
 
-		if(post != null){
-			post.addComment(this.getFirstName() + " " + this.getLastName(), comment);
-		}else{
+		if (post != null) {
+			post.addComment(this, comment);
+		} else {
 			throw new UserException("Invalid post! ");
 		}
 
@@ -216,40 +209,27 @@ public class User implements IUser {
 		if (post == null) {
 			throw new UserException("Invalid Post to delete!");
 		}
-		
+
 		this.personalWall.removePost(post);
 		this.commonWall.removePost(post);
 	}
 
-	//MAHAME GO HAHAHAAHAHHAHAHAAH
+	// MAHAME GO HAHAHAAHAHHAHAHAAH
 	/*
-	@Override
-	public void reportPost(User friend, Post post) {
-		// TODO Auto-generated method stub
+	 * @Override public void reportPost(User friend, Post post) { // TODO
+	 * Auto-generated method stub
+	 * 
+	 * }
+	 */
 
-	}
-*/
-	
 	@Override
-	public void postPicture(String pathToThePhoto) throws UserException, PostException, PhotoException, WallException {
-	
-		this.postPictureWithText(pathToThePhoto, "");
-	}
-	
-	@Override
-	public void postText(String text) throws UserException, PostException, PhotoException, WallException  {
-	
-		this.postPictureWithText("", text);
-	}
-	
-	@Override
-	public void postPictureWithText(String pathToThePhoto, String text) throws UserException, PostException, PhotoException, WallException {
-	
-		if(pathToThePhoto != null && pathToThePhoto.trim().length() > 0
-				&& text != null && text.trim().length() > 0){
-			Photo newPhoto = new Photo(text, pathToThePhoto);
+	public void postPicture(String pathToThePhoto, String text)
+			throws UserException, PostException, PhotoException, WallException {
+
+		if (pathToThePhoto != null && pathToThePhoto.trim().length() > 0 && text != null && text.trim().length() > 0) {
+			Photo newPhoto = new Photo(text, pathToThePhoto, this);
 			this.personalWall.addPost(newPhoto);
-		}else{
+		} else {
 			throw new UserException("Invalid picture! ");
 		}
 
@@ -259,12 +239,14 @@ public class User implements IUser {
 	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
 		// VANKATA: promenqm malko, realiziram chata2
-		if (!this.friends.containsValue(user)) {
+		if (!this.hasThisFriend(user)) {
 			this.friends.put(user.getEmail(), user);
 		}
+
 		if (!user.hasThisFriend(this)) {
 			user.addFriend(this);
 		}
+
 		Chat chat = new Chat();
 		this.addNewChat(user, chat);
 		user.addNewChat(this, chat);
@@ -283,28 +265,49 @@ public class User implements IUser {
 		}
 	}
 
-	
-	//SHTE PITAME NIKI HAHAHAHAHHAAHAHAHA
+	// SHTE PITAME NIKI HAHAHAHAHHAAHAHAHA
 	@Override
-	public void removeFirend(User user) {
+	public String removeFirend(User friend) throws UserException {
 
-		if(user != null){
-			
-		}else{
-			
+		if (friend == null) {
+			throw new UserException("How can I remove Peter Pan?");
 		}
+
+		if (this.hasThisFriend(friend)) {
+			this.friends.remove(friend.getEmail());
+			return friend.getFirstName() + " " + friend.getLastName() + " has been removed!";
+
+		} else {
+			return friend.getFirstName() + " " + friend.getLastName() + " is not your friend!";
+		}
+
 	}
 
 	@Override
-	public void reviewFriendInfo(User friend) {
+	public String reviewFriendInfo(User friend) throws UserException {
 
-		//if(this.friends.containsKey(friend.getEmail()))
+		if (friend == null) {
+			throw new UserException("How can I show info of  Peter Pan?");
+		}
+
+		if (this.hasThisFriend(friend)) {
+			return friend.getFirstName() + " " + friend.getLastName() + " " + friend.getEmail() + " "
+					+ friend.birthdayDate;
+
+		} else {
+			return friend.getFirstName() + " " + friend.getLastName() + " is not your friend!";
+		}
+
 	}
 
 	@Override
-	public void reviewFriendWall(User firend) {
+	public void reviewFriendWall(User friend) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public CommonWall getCommonWall() {
+		return commonWall;
 	}
 
 	@Override
@@ -367,15 +370,9 @@ public class User implements IUser {
 		this.getChatbyUser(friend).printChat();
 	}
 
-	private PersonalWall getPersonalWall() {
+	public PersonalWall getPersonalWall() {
 
 		return this.personalWall;
-	}
-
-	@Override
-	public void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
