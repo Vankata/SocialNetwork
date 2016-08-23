@@ -256,7 +256,7 @@ public class User implements IUser {
 	//Tyrsim po obekt ot tip user
 	public boolean hasThisFriend(User user) throws UserException {
 		if (user != null) {
-			if (this.friends.containsValue(user)) {
+			if (this.friends.containsKey(user.getEmail())) {
 				return true;
 			}
 			return false;
@@ -318,7 +318,7 @@ public class User implements IUser {
 
 	@Override
 	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
-		if (this.friends.containsKey(friend.getEmail())) {
+		if (this.hasThisFriend(friend)) {
 			this.getChatbyUser(friend).addMessage(message);
 		} else {
 			throw new UserException("Invalid friend! ");

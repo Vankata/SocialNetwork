@@ -1,6 +1,7 @@
 package user;
 
 import user.exceptions.InvalidInfoForRegistrationException;
+import user.exceptions.UserException;
 import user.exceptions.WrongEmailException;
 import user.exceptions.WrongPasswordException;
 
@@ -12,7 +13,7 @@ public class Guest {
 
 	// Sign in
 	public void signIn(String email, String password, String firstName, String lastName)
-			throws InvalidInfoForRegistrationException {
+			throws InvalidInfoForRegistrationException, UserException {
 		if ((isStringValid(email)) && (isEmailValid(email))) {
 			if (!status.containsUser(email)) {
 				if (isPasswordValid(password)) {

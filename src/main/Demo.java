@@ -29,6 +29,7 @@ public class Demo {
 			vankata.sendMessage(troqn, "Tihol, che Spico spi!!!!!");
 			
 			troqn.reviewChat(vankata);
+			vankata.reviewChat(troqn);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
