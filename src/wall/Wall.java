@@ -1,13 +1,17 @@
 package wall;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.print.attribute.standard.RequestingUserName;
 
 import wall.exceptions.WallException;
 
 public abstract class Wall {
 	
-	private Set<Post> posts = new TreeSet<Post>();
+	private Set<Post> posts = new TreeSet<Post>((o1, o2) -> o1.getTimeOfThePost().compareTo(o2.getTimeOfThePost()));
+	//komperatori
 	
 	public Wall(){
 		

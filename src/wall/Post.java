@@ -1,10 +1,13 @@
 package wall;
 
+import java.awt.image.VolatileImage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import wall.exceptions.PostException;
@@ -16,7 +19,7 @@ public class Post {
 	private int numberOfLikes;
 	private int numberOfComments;
 	private Set<String> namesOfUsersLikedThisPost = new HashSet<String>();
-	private List<Post> comments = new LinkedList<Post>();
+	private Map<String, String> comments = new HashMap<String, String>();
 	
 	public Post(String text) throws PostException {
 		
@@ -37,12 +40,6 @@ public class Post {
 			this.namesOfUsersLikedThisPost.add(name);
 		}
 	}
-	
-	public void addComment(Post newComment){
-		if(newComment != null){
-			this.comments.add(newComment);
-		}
-	}
 
 	//Only for test
 	@Override
@@ -54,5 +51,27 @@ public class Post {
 	
 	public LocalDateTime getTimeOfThePost() {
 		return timeOfThePost;
+	}
+	
+	public void addLike(String nameOfPersonLikedIt) throws PostException{
+		
+		if (nameOfPersonLikedIt == null || nameOfPersonLikedIt.trim().length() == 0) {
+			throw new PostException("Ivalid person that likes the post");
+		}
+		
+		this.numberOfLikes++;
+		namesOfUsersLikedThisPost.add(nameOfPersonLikedIt);
+	}
+	
+	public void addComment(String nameOfPersonWhoCommentedIt, String comment) throws PostException{
+		if (nameOfPersonWhoCommentedIt == null || nameOfPersonWhoCommentedIt.trim().length() == 0) {
+			throw new PostException("Ivalid person that comments the post! ");
+		}
+		if (comment == null || comment.trim().length() == 0) {
+			throw new PostException("Ivalid comment! ");
+		}
+		
+		this.numberOfComments++;
+		this.comments.put(nameOfPersonWhoCommentedIt, comment);
 	}
 }

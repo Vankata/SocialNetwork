@@ -5,25 +5,34 @@ import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import user.exceptions.UserException;
 import wall.Post;
+import wall.exceptions.PhotoException;
+import wall.exceptions.PostException;
+import wall.exceptions.WallException;
 
 public interface IUser {
 	// mojem da haresvame samo na drugite
 
-	public abstract void likeFriendsPost(String friendName, Post post) throws UserException;
+	public abstract void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException;
 
 	// mojem da kometirame na drugite i na nas
-	public abstract void commentPost(User user, Post post, String comment);
+	public abstract void commentPost(Post post, String comment) throws PostException, UserException;
 
 	// mojem da triem samo nashi postove
 	// shte proverqvame dali postyt e instanceof Photo
-	public abstract void deletePost(Post post) throws UserException;
+	public abstract void deletePost(Post post) throws UserException, WallException;
 
 	// mojem da reportvame samo postove na priqteli
-	public abstract void reportPost(User friend, Post post);
+	//public abstract void reportPost(User friend, Post post);
 
-	// dobavqme posta na nashata stena
-	public abstract void addPost(Post post) throws UserException;
+	// dobavqme snimka na stenata
+	public abstract void postPicture(String picturePath) throws UserException, PostException, PhotoException, WallException;
 
+	//dobavqme snimka s text na stenata
+	public abstract void postPictureWithText(String pathToThePhoto, String text) throws UserException, PostException, PhotoException, WallException;
+	
+	//dobavqme text na stenata
+	public abstract void postText(String text) throws UserException, PostException, PhotoException, WallException;
+	
 	// ---------------------------------------
 	// proverqvame dali syshtestvuva v userStatus i dali veche go imame
 	public abstract void addFriend(User user) throws UserException, ChatBoxException;

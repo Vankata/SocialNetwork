@@ -49,7 +49,7 @@ public class Guest {
 		return email.matches(EMAIL_REGEX);
 	}
 
-	static boolean isStringValid(String string) {
+	 boolean isStringValid(String string) {
 		return ((string != null) && (string.trim().length() > 0));
 	}
 

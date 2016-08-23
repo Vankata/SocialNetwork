@@ -1,5 +1,6 @@
 package user;
 
+import java.io.BufferedWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,10 +18,11 @@ import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import user.exceptions.UserException;
 import wall.CommonWall;
-import wall.IPersonalWall;
 import wall.PersonalWall;
 import wall.Photo;
 import wall.Post;
+import wall.exceptions.PhotoException;
+import wall.exceptions.PostException;
 import wall.exceptions.WallException;
 
 public class User implements IUser {
@@ -59,7 +61,7 @@ public class User implements IUser {
 
 	}
 
-	boolean chekPassword(String password){
+	boolean chekPassword(String password) {
 		return this.password.equals(password);
 	}
 
@@ -145,28 +147,23 @@ public class User implements IUser {
 		}
 	}
 
-	
 	// Should be private and not in the interface/
 	// friendsWithThisName() will be in the interface and the friend will be
 	// find by name
-	private void likePost(User friend, Post post) { // increment the number likes
-													// for this post
+	private void likePost(Post post) throws WallException, PostException, UserException {
 
-		/*
-		 * Namirame post v postovete na uzyra i mi inkrementirame broq na
-		 * laikovete. dobavqme imeto na uzyra koito haresva post v imenata na
-		 * horata koito sa go haresali postovete v klas stena sa treeset i nama
-		 * random dostyp to tqh. Moje bi trqbwa da gi pazim v arraylist
-		 */
-
+		if(post != null){
+			post.addLike(this.getFirstName() + " " + this.getLastName());
+		}else{
+			throw new UserException("Invalid post! ");
+		}
 	}
-	@Override
-	public void likeFriendsPost(String friendName, Post post) throws UserException {
 
-		if (post == null /*
-							 * validacia za imeto. She izpolzvame metoda za
-							 * validaciq na string ot Geri
-							 */) {
+	/*
+	@Override
+	public void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException {
+
+		if (post == null || !isStringValid(friendName)) {
 			throw new UserException("You are trying  to like a post with invalid friend name or post");
 		}
 
@@ -202,37 +199,58 @@ public class User implements IUser {
 
 	}
 
+*/
 	@Override
-	public void commentPost(User user, Post post, String comment) {
-		// TODO Auto-generated method stub
+	public void commentPost(Post post, String comment) throws PostException, UserException {
 
-	}
-
-	@Override
-	public void deletePost(Post post) throws UserException {
-		if (post == null) {
-			throw new UserException("Invalid Post to delete!");
+		if(post != null){
+			post.addComment(this.getFirstName() + " " + this.getLastName(), comment);
+		}else{
+			throw new UserException("Invalid post! ");
 		}
 
 	}
 
 	@Override
+	public void deletePost(Post post) throws UserException, WallException {
+		if (post == null) {
+			throw new UserException("Invalid Post to delete!");
+		}
+		
+		this.personalWall.removePost(post);
+		this.commonWall.removePost(post);
+	}
+
+	//MAHAME GO HAHAHAAHAHHAHAHAAH
+	/*
+	@Override
 	public void reportPost(User friend, Post post) {
 		// TODO Auto-generated method stub
 
 	}
-
+*/
+	
 	@Override
-	public void addPost(Post post) throws UserException {
-		// if (post == null) {
-		// throw new UserException("Invalid post to add");
-		// }
-
-		try {
-			this.personalWall.addPost(post);
-		} catch (WallException e) {
-			// TODO Auto-generated catch block
-			throw new UserException(e.getMessage(), e);
+	public void postPicture(String pathToThePhoto) throws UserException, PostException, PhotoException, WallException {
+	
+		this.postPictureWithText(pathToThePhoto, "");
+	}
+	
+	@Override
+	public void postText(String text) throws UserException, PostException, PhotoException, WallException  {
+	
+		this.postPictureWithText("", text);
+	}
+	
+	@Override
+	public void postPictureWithText(String pathToThePhoto, String text) throws UserException, PostException, PhotoException, WallException {
+	
+		if(pathToThePhoto != null && pathToThePhoto.trim().length() > 0
+				&& text != null && text.trim().length() > 0){
+			Photo newPhoto = new Photo(text, pathToThePhoto);
+			this.personalWall.addPost(newPhoto);
+		}else{
+			throw new UserException("Invalid picture! ");
 		}
 
 	}
@@ -253,7 +271,7 @@ public class User implements IUser {
 	}
 
 	// VANKATA dobavqm tozi metod
-	//Tyrsim po obekt ot tip user
+	// Tyrsim po obekt ot tip user
 	public boolean hasThisFriend(User user) throws UserException {
 		if (user != null) {
 			if (this.friends.containsKey(user.getEmail())) {
@@ -265,16 +283,22 @@ public class User implements IUser {
 		}
 	}
 
+	
+	//SHTE PITAME NIKI HAHAHAHAHHAAHAHAHA
 	@Override
 	public void removeFirend(User user) {
-		// TODO Auto-generated method stub
 
+		if(user != null){
+			
+		}else{
+			
+		}
 	}
 
 	@Override
 	public void reviewFriendInfo(User friend) {
-		// TODO Auto-generated method stub
 
+		//if(this.friends.containsKey(friend.getEmail()))
 	}
 
 	@Override
@@ -296,6 +320,10 @@ public class User implements IUser {
 			System.out.println("Invalid password or email. The profile hasn't been deleted");
 		}
 
+	}
+
+	boolean isStringValid(String string) {
+		return ((string != null) && (string.trim().length() > 0));
 	}
 
 	@Override
@@ -337,6 +365,17 @@ public class User implements IUser {
 	@Override
 	public void reviewChat(User friend) throws UserException {
 		this.getChatbyUser(friend).printChat();
+	}
+
+	private PersonalWall getPersonalWall() {
+
+		return this.personalWall;
+	}
+
+	@Override
+	public void likeFriendsPost(String friendName, Post post) throws UserException, WallException, PostException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

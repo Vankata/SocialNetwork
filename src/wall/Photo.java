@@ -6,7 +6,7 @@ import wall.exceptions.PostException;
 public class Photo extends Post {
 	
 	private String pathToThePhoto;
-	
+
 	public Photo(String text, String pathToThePhoto) throws PostException, PhotoException {
 		super(text);
 	
