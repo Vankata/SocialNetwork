@@ -4,6 +4,7 @@ import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import user.exceptions.UserException;
+import user.exceptions.UserStatusException;
 import wall.PersonalWall;
 import wall.Post;
 import wall.exceptions.PhotoException;
@@ -45,10 +46,12 @@ public interface IUser {
 
 	// pokazva stenata na friend
 	public abstract PersonalWall reviewFriendWall(String name, String lastName) throws Exception;
+//	searching from status
+	public User searchUser(String name, String lastName) throws UserException;
 
 	// ---------------------------------------
 	// trie profila ot userStatus
-	public abstract void deleteProfile(String password, String email);
+	public abstract void deleteProfile(String password, String email) throws UserStatusException;
 
 	// izlizame ot accounta, zarejda ni guest stranicata
 	public abstract void logout();

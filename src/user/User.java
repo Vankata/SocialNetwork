@@ -17,6 +17,7 @@ import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import user.exceptions.UserException;
+import user.exceptions.UserStatusException;
 import wall.CommonWall;
 import wall.PersonalWall;
 import wall.Photo;
@@ -55,7 +56,7 @@ public class User implements IUser {
 		this.setEmail(email);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
-		this.status=status;
+		this.status = status;
 
 		this.friends = new HashMap<String, User>();
 		this.personalWall = new PersonalWall();
@@ -163,8 +164,8 @@ public class User implements IUser {
 	 * throws UserException, WallException, PostException {
 	 * 
 	 * if (post == null || !isStringValid(friendName)) { throw new
-	 * UserException("You are trying  to like a post with invalid friend name or post"
-	 * ); }
+	 * UserException(
+	 * "You are trying  to like a post with invalid friend name or post" ); }
 	 * 
 	 * List<User> friendsWithThisName = new ArrayList<User>();
 	 * 
@@ -184,9 +185,9 @@ public class User implements IUser {
 	 * 
 	 * for (User friend : friendsWithThisName) {
 	 * System.out.println(friend.getFirstName() + " " + friend.getLastName()); }
-	 * throw new
-	 * UserException("U have more than one frined with this name. Please be more Specific"
-	 * ); }
+	 * throw new UserException(
+	 * "U have more than one frined with this name. Please be more Specific" );
+	 * }
 	 * 
 	 * // Get index 0, cuz we are sure that only one obj is in the arraylist
 	 * this.likePost(friendsWithThisName.get(0), post);
@@ -304,11 +305,11 @@ public class User implements IUser {
 
 	@Override
 	public PersonalWall reviewFriendWall(String name, String lastName) throws Exception {
-		User searchedUser=this.searchUser(name, lastName);
-		if(searchedUser instanceof User){
-		return searchedUser.getPersonalWall();
-		}
-		return null;
+		User searchedUser = this.searchUser(name, lastName);
+		if ((searchedUser != null) && (this.friends.containsKey(searchedUser.getEmail()))) {
+			return searchedUser.getPersonalWall();
+		} else
+			throw new UserException("Invalid names. You do not have this friend.");
 	}
 
 	public CommonWall getCommonWall() {
@@ -316,7 +317,7 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void deleteProfile(String password, String email) {
+	public void deleteProfile(String password, String email) throws UserStatusException {
 
 		// Validation
 
@@ -379,15 +380,18 @@ public class User implements IUser {
 
 		return this.personalWall;
 	}
-//	GERI: dobavqm metod:
-	public User searchUser(String name, String lastName) throws Exception {
 
-		for(String key: status.getAllUsers().keySet()){
-			if((status.getAllUsers().get(key).getFirstName().equals(name))&&(status.getAllUsers().get(key).getLastName().equals(lastName))){
-				String email=status.getAllUsers().get(key).getEmail();
-				return status.getAllUsers().get(email);
+	// GERI: dobavqm metod:
+	public User searchUser(String name, String lastName) throws UserException {
+		if ((isStringValid(name)) && (isStringValid(lastName))) {
+			for (String key : status.getAllUsers().keySet()) {
+				if ((status.getAllUsers().get(key).getFirstName().equals(name))
+						&& (status.getAllUsers().get(key).getLastName().equals(lastName))) {
+					String email = status.getAllUsers().get(key).getEmail();
+					return status.getAllUsers().get(email);
+				}
 			}
 		}
-		throw new Exception("There's no user with this name!");
+		throw new UserException("There's no user with this name!");
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 
 import user.exceptions.AdminException;
 import user.exceptions.UserException;
+import user.exceptions.UserStatusException;
 import wall.Post;
 import wall.exceptions.WallException;
 
@@ -34,8 +35,8 @@ public class Admin extends User implements IAdmin {
 	}
 
 	@Override
-	public void removeUser(String email) {
-		if ((email != null) && (email.trim().length() > 0)) {
+	public void removeUser(String email) throws UserStatusException {
+		if (isStringValid(email)) {
 			status.removeUser(email);	
 		}
 		

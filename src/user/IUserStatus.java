@@ -2,6 +2,8 @@ package user;
 
 import java.util.List;
 
+import user.exceptions.UserStatusException;
+
 public interface IUserStatus {
 
 	boolean containsUser(String email);
@@ -10,7 +12,7 @@ public interface IUserStatus {
 	void addUser(User user);
 
 	//mahame go pri banvane ili iztrivane na profila
-	void removeUser(String email);
+	void removeUser(String email) throws UserStatusException;
 
 
 	//pri tyrsene na chovek s cel dobavqne vyv friends

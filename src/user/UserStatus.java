@@ -27,30 +27,32 @@ public class UserStatus implements IUserStatus {
 
 	// mahame go pri banvane ili iztrivane na profila
 	@Override
-	public void removeUser(String email) {
-
-		if (allUsers.containsKey(email)) {
-			System.out.println("You deleted your profile successfuly, " + allUsers.get(email).getFirstName() + " "
-					+ allUsers.get(email).getLastName() + "!");
-			allUsers.remove(email);
-
+	public void removeUser(String email) throws UserStatusException {
+		if ((email != null) && (email.trim().length() > 0)) {
+			if (allUsers.containsKey(email)) {
+				System.out.println("You deleted your profile successfuly, " + allUsers.get(email).getFirstName() + " "
+						+ allUsers.get(email).getLastName() + "!");
+				allUsers.remove(email);
+			}
 		}
+		else throw new UserStatusException("Invalid email!");
 
 	}
 
 	// pri tyrsene na chovek s cel dobavqne vyv friends;
-//	GERI: ne znam zashto tozi metod e tuk, a ne v User, razpisah go, ima go i tuk i v User
-//	@Override
-//	public User searchUser(String name, String lastName) throws Exception {
-//
-//		for(String key: allUsers.keySet()){
-//			if((allUsers.get(key).getFirstName().equals(name))&&(allUsers.get(key).getLastName().equals(lastName))){
-//				String email=allUsers.get(key).getEmail();
-//				return allUsers.get(email);
-//			}
-//		}
-//		throw new Exception("There's no user with this name!");
-//	}
+	// GERI: ne znam zashto tozi metod e tuk, a ne v User, razpisah go, ima go i
+	// tuk i v User
+	// @Override
+	// public User searchUser(String name, String lastName) throws Exception {
+	//
+	// for(String key: allUsers.keySet()){
+	// if((allUsers.get(key).getFirstName().equals(name))&&(allUsers.get(key).getLastName().equals(lastName))){
+	// String email=allUsers.get(key).getEmail();
+	// return allUsers.get(email);
+	// }
+	// }
+	// throw new Exception("There's no user with this name!");
+	// }
 
 	// Tova da se opravi!!!!vryshtane na kolekciq
 
