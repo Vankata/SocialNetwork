@@ -9,7 +9,7 @@ import wall.exceptions.WallException;
 
 public class Admin extends User implements IAdmin {
 
-	// private UserStatus userStatus;
+	 private UserStatus status=Guest.getStatus();
 
 	public Admin(String password, String email, String firstName, String lastName, UserStatus status)
 			throws UserException {
@@ -28,13 +28,17 @@ public class Admin extends User implements IAdmin {
 
 		user.getPersonalWall().removePost(post);
 
-		for (Entry<String, User> entry : userStatus.allUsers.entrySet()) {
+		for (Entry<String, User> entry : status.allUsers.entrySet()) {
 			entry.getValue().getCommonWall().removePost(post);
 		}
 	}
 
 	@Override
-	public void removeUser(User user) {
-
+	public void removeUser(String email) {
+		if ((email != null) && (email.trim().length() > 0)) {
+			status.removeUser(email);	
+		}
+		
 	}
+
 }

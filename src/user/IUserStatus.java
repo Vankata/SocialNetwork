@@ -10,9 +10,11 @@ public interface IUserStatus {
 	void addUser(User user);
 
 	//mahame go pri banvane ili iztrivane na profila
-	void removeUser(User user);
+	void removeUser(String email);
+
 
 	//pri tyrsene na chovek s cel dobavqne vyv friends
-	List<User> searchUser(User user);
+//	User searchUser(String name, String lastName) throws Exception;
+
 
 }

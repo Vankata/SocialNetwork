@@ -33,4 +33,10 @@ public abstract class Wall {
 			throw new WallException("Invalid post! ");
 		}
 	}
+//	GERI: dobavqm s cel testvane!
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+	
 }

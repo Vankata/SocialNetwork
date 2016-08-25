@@ -4,6 +4,7 @@ import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import user.exceptions.UserException;
+import wall.PersonalWall;
 import wall.Post;
 import wall.exceptions.PhotoException;
 import wall.exceptions.PostException;
@@ -43,7 +44,7 @@ public interface IUser {
 	public abstract String reviewFriendInfo(User friend) throws UserException;
 
 	// pokazva stenata na friend
-	public abstract void reviewFriendWall(User firend);
+	public abstract PersonalWall reviewFriendWall(String name, String lastName) throws Exception;
 
 	// ---------------------------------------
 	// trie profila ot userStatus

@@ -21,6 +21,7 @@ import wall.CommonWall;
 import wall.PersonalWall;
 import wall.Photo;
 import wall.Post;
+import wall.Wall;
 import wall.exceptions.PhotoException;
 import wall.exceptions.PostException;
 import wall.exceptions.WallException;
@@ -45,15 +46,16 @@ public class User implements IUser {
 	private Photo profilePicture;
 
 	// ----------------------------------
-	protected UserStatus userStatus;
+	protected UserStatus status;
 
-	public User(String password, String email, String firstName, String lastName, UserStatus userStatus)
+	public User(String password, String email, String firstName, String lastName, UserStatus status)
 			throws UserException {
 
 		this.setPassword(password);
 		this.setEmail(email);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
+		this.status=status;
 
 		this.friends = new HashMap<String, User>();
 		this.personalWall = new PersonalWall();
@@ -301,9 +303,12 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void reviewFriendWall(User friend) {
-		// TODO Auto-generated method stub
-
+	public PersonalWall reviewFriendWall(String name, String lastName) throws Exception {
+		User searchedUser=this.searchUser(name, lastName);
+		if(searchedUser instanceof User){
+		return searchedUser.getPersonalWall();
+		}
+		return null;
 	}
 
 	public CommonWall getCommonWall() {
@@ -316,7 +321,7 @@ public class User implements IUser {
 		// Validation
 
 		if (password.equals(this.password) && email.equals(this.email)) {
-			this.userStatus.removeUser(this);
+			this.status.removeUser(email);
 			// We need to set all references of this user to null(set this user
 			// to null in his friends, friend's list)
 		} else {
@@ -374,5 +379,15 @@ public class User implements IUser {
 
 		return this.personalWall;
 	}
+//	GERI: dobavqm metod:
+	public User searchUser(String name, String lastName) throws Exception {
 
+		for(String key: status.getAllUsers().keySet()){
+			if((status.getAllUsers().get(key).getFirstName().equals(name))&&(status.getAllUsers().get(key).getLastName().equals(lastName))){
+				String email=status.getAllUsers().get(key).getEmail();
+				return status.getAllUsers().get(email);
+			}
+		}
+		throw new Exception("There's no user with this name!");
+	}
 }

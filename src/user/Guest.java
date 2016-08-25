@@ -9,7 +9,7 @@ public class Guest {
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 	private static final int MIN_LENGTH_FOR_PASSWORD = 6;
 	// static- status obsht za vsichki
-	private static UserStatus status = new UserStatus();
+	private static UserStatus status=new UserStatus();
 
 	// Sign in
 	public void signIn(String email, String password, String firstName, String lastName)
@@ -38,6 +38,7 @@ public class Guest {
 	public User logIn(String email, String password) throws WrongPasswordException, WrongEmailException {
 		if (status.containsUser(email)) {
 			if (status.getAllUsers().get(email).chekPassword(password)) {
+				System.out.println("You logged in successfuly!");
 				return status.getAllUsers().get(email);
 			} else
 				throw new WrongPasswordException("You entered wrong password! Try again!");
@@ -71,4 +72,11 @@ public class Guest {
 		}
 		return hasDigit && hasSmallCase && hasUpperCase;
 	}
+
+	public static UserStatus getStatus() {
+		return status;
+	}
+
+	
+
 }

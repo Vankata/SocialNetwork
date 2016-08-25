@@ -8,6 +8,6 @@ public interface IAdmin {
 
 	void removePost(User user, Post post) throws AdminException, WallException;
 
-	void removeUser(User user);
+	void removeUser(String email);
 
 }
