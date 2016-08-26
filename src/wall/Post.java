@@ -16,17 +16,17 @@ import wall.exceptions.PostException;
 
 public class Post {
 
-///	private static int postId = 0;
+	/// private static int postId = 0;
 	private LocalDateTime timeOfThePost;
 	private String text;
 	private int numberOfLikes;
 	private int numberOfComments;
-//	private final int id;
+	// private final int id;
 	private User ownerOfThePost;
 	private Set<String> namesOfUsersLikedThisPost = new HashSet<String>();
 
 	// key->PostId value->comment
-	 private List<Post> comments = new ArrayList<Post>();
+	private List<Post> comments = new ArrayList<Post>();
 
 	public Post(String text, User ownerOfThePost) throws PostException {
 
@@ -45,7 +45,7 @@ public class Post {
 		this.timeOfThePost = LocalDateTime.now();
 		this.numberOfLikes = 0;
 		this.numberOfComments = 0;
-		//this.id = postId++;
+		// this.id = postId++;
 	}
 
 	public void addNameOfUserWhoLikedThisPost(String name) {
@@ -73,12 +73,17 @@ public class Post {
 			throw new PostException("Ivalid person that likes the post");
 		}
 
-		this.numberOfLikes++;
-		this.namesOfUsersLikedThisPost.add(nameOfPersonLikedIt);
+		if (!this.namesOfUsersLikedThisPost.contains(nameOfPersonLikedIt)) {
+			this.numberOfLikes++;
+			this.namesOfUsersLikedThisPost.add(nameOfPersonLikedIt);
+		}else{
+			this.numberOfLikes--;
+			this.namesOfUsersLikedThisPost.remove(nameOfPersonLikedIt);
+		}
 	}
 
 	public void addComment(User userThatLikeThePost, String comment) throws PostException {
-		if (userThatLikeThePost == null ) {
+		if (userThatLikeThePost == null) {
 			throw new PostException("Ivalid person that comments the post! ");
 		}
 		if (comment == null || comment.trim().length() == 0) {
@@ -86,19 +91,45 @@ public class Post {
 		}
 
 		this.numberOfComments++;
-		this.comments.add(new Post(comment,userThatLikeThePost));
+		this.comments.add(new Post(comment, userThatLikeThePost));
 	}
-	
-	public String[] namesOfFriendsLikedThePost() {
-		
+
+	public String[] namesOfFriendsCommentedThePost() {
+
 		String[] names = new String[this.comments.size()];
 		int nameNumber = 0;
-		
+
 		for (Post comment : comments) {
 			names[nameNumber++] = comment.ownerOfThePost.getFirstName() + " " + comment.ownerOfThePost.getLastName();
 		}
 		return names;
-		
+
 	}
-	
+
+	public String[] namesOfFriendsLikedThePost() {
+
+		String[] names = new String[this.numberOfLikes];
+		int nameNumber = 0;
+
+		for (String name : this.namesOfUsersLikedThisPost) {
+			names[nameNumber++] = name;
+		}
+		return names;
+
+	}
+
+	public String[] commentsOnThePost() {
+
+		String[] comments = new String[this.numberOfComments];
+
+		for (int index = 0; index < this.comments.size(); index++) {
+			comments[index] = this.comments.get(index).getText();
+		}
+		return comments;
+
+	}
+
+	public String getText() {
+		return text;
+	}
 }

@@ -6,6 +6,7 @@ import chat.exceptions.MessageException;
 import user.exceptions.UserException;
 import user.exceptions.UserStatusException;
 import wall.PersonalWall;
+import wall.Photo;
 import wall.Post;
 import wall.exceptions.PhotoException;
 import wall.exceptions.PostException;
@@ -29,7 +30,7 @@ public interface IUser {
 
 
 	// dobavqme snimka s text na stenata
-	public abstract void postPicture(String pathToThePhoto, String text)
+	public abstract Photo postPicture(String pathToThePhoto, String text)
 			throws UserException, PostException, PhotoException, WallException;
 
 

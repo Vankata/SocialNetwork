@@ -56,15 +56,19 @@ public class User implements IUser {
 		this.setEmail(email);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
-		this.status = status;
+		
+		if(status != null){
+			this.status = status;
+		}else{
+			throw new UserException("Invalid user status! ");
+		}
 
 		this.friends = new HashMap<String, User>();
 		this.personalWall = new PersonalWall();
 		this.commonWall = new CommonWall();
-
 	}
 
-	boolean chekPassword(String password) {
+	protected boolean chekPassword(String password) {
 		return this.password.equals(password);
 	}
 
@@ -226,12 +230,13 @@ public class User implements IUser {
 	 */
 
 	@Override
-	public void postPicture(String pathToThePhoto, String text)
+	public Photo postPicture(String pathToThePhoto, String text)
 			throws UserException, PostException, PhotoException, WallException {
 
 		if (pathToThePhoto != null && pathToThePhoto.trim().length() > 0 && text != null && text.trim().length() > 0) {
 			Photo newPhoto = new Photo(text, pathToThePhoto, this);
 			this.personalWall.addPost(newPhoto);
+			return newPhoto;
 		} else {
 			throw new UserException("Invalid picture! ");
 		}
