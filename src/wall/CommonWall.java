@@ -31,5 +31,12 @@ public class CommonWall extends Wall {
 
 		}
 	}
+	
+	public boolean containsPost(Post post){
+		if(this.posts.contains(post)){
+			return true;
+		}
+		return false;
+	}
 
 }

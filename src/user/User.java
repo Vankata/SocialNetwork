@@ -218,7 +218,9 @@ public class User implements IUser {
 		}
 
 		this.personalWall.removePost(post);
-		this.commonWall.removePost(post);
+		if(this.commonWall.containsPost(post)){
+			this.commonWall.removePost(post);
+		}
 	}
 
 	// MAHAME GO HAHAHAAHAHHAHAHAAH
@@ -236,6 +238,7 @@ public class User implements IUser {
 		if (pathToThePhoto != null && pathToThePhoto.trim().length() > 0 && text != null && text.trim().length() > 0) {
 			Photo newPhoto = new Photo(text, pathToThePhoto, this);
 			this.personalWall.addPost(newPhoto);
+			this.commonWall.addPost(newPhoto);
 			return newPhoto;
 		} else {
 			throw new UserException("Invalid picture! ");
@@ -273,7 +276,6 @@ public class User implements IUser {
 		}
 	}
 
-	// SHTE PITAME NIKI HAHAHAHAHHAAHAHAHA
 	@Override
 	public String removeFirend(User friend) throws UserException {
 
