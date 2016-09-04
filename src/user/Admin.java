@@ -10,11 +10,22 @@ import wall.exceptions.WallException;
 
 public class Admin extends User implements IAdmin {
 
-	 private UserStatus status=Guest.getStatus();
+	private static Admin adminInstance = null;
 
-	public Admin(String password, String email, String firstName, String lastName, UserStatus status)
+	private UserStatus status = Guest.getStatus();
+
+	private Admin(String password, String email, String firstName, String lastName, UserStatus status)
 			throws UserException {
 		super(password, email, firstName, lastName, status);
+	}
+
+	public static Admin getInstance(String password, String email, String firstName, String lastName, UserStatus status)
+			throws UserException {
+		if (adminInstance == null) {
+			adminInstance = new Admin(password, email, firstName, lastName, status);
+		}
+		return adminInstance;
+
 	}
 
 	@Override
@@ -37,9 +48,9 @@ public class Admin extends User implements IAdmin {
 	@Override
 	public void removeUser(String email) throws UserStatusException {
 		if (isStringValid(email)) {
-			status.removeUser(email);	
+			status.removeUser(email);
 		}
-		
+
 	}
 
 }
