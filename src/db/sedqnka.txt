@@ -1,0 +1,205 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`users` (
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) NOT NULL,
+  `last_name` VARCHAR(45) NOT NULL,
+  `phone_number` VARCHAR(45) NOT NULL,
+  `birthday` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`friends`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`friends` (
+  `user1_id` INT(11) NOT NULL,
+  `user2_id` INT(11) NOT NULL,
+  INDEX `user2_id_idx` (`user2_id` ASC),
+  INDEX `user1_id_idx` (`user1_id` ASC),
+  PRIMARY KEY (`user2_id`, `user1_id`),
+  CONSTRAINT `fk_user1_id`
+    FOREIGN KEY (`user1_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user2_id`
+    FOREIGN KEY (`user2_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`chats`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`chats` (
+  `chat_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user1_id` INT(11) NOT NULL,
+  `user2_id` INT(11) NOT NULL,
+  PRIMARY KEY (`chat_id`, `user1_id`, `user2_id`),
+  INDEX `fk_chats_friends1_idx` (`user1_id` ASC, `user2_id` ASC),
+  CONSTRAINT `fk_chats_friends1`
+    FOREIGN KEY (`user1_id` , `user2_id`)
+    REFERENCES `mydb`.`friends` (`user2_id` , `user1_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`messages` (
+  `message_id` INT(11) NOT NULL,
+  `time_of_the_message` DATETIME NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
+  `chat_id` INT(11) NOT NULL,
+  PRIMARY KEY (`message_id`),
+  INDEX `chat_id_idx` (`chat_id` ASC),
+  CONSTRAINT `chat_id`
+    FOREIGN KEY (`chat_id`)
+    REFERENCES `mydb`.`chats` (`chat_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`admins`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`admins` (
+  `admin_id` INT NOT NULL,
+  PRIMARY KEY (`admin_id`),
+  CONSTRAINT `admin_id`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`posts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
+  `post_id` INT NOT NULL AUTO_INCREMENT,
+  `likes` INT NULL,
+  `comments` INT NULL,
+  `text` VARCHAR(45) NULL,
+  `pic_path` VARCHAR(45) NULL,
+  PRIMARY KEY (`post_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`common_walls`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`common_walls` (
+  `user_id` INT NOT NULL,
+  `post_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `post_id_idx` (`post_id` ASC),
+  CONSTRAINT `user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `post_id`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`personal_walls`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`personal_walls` (
+  `user_id` INT NOT NULL,
+  `post_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `post_id_idx` (`post_id` ASC),
+  CONSTRAINT `user_id0`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `post_id0`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`comments`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
+  `comment_id` INT NOT NULL,
+  `text` MEDIUMTEXT NULL,
+  `post_id` INT NOT NULL,
+  PRIMARY KEY (`comment_id`),
+  INDEX `fk_comments_posts1_idx` (`post_id` ASC),
+  CONSTRAINT `fk_comments_posts1`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`likes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`likes` (
+  `user_id` INT(11) NOT NULL,
+  `post_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `fk_likes_users1_idx` (`user_id` ASC),
+  INDEX `fk_likes_posts1_idx` (`post_id` ASC),
+  CONSTRAINT `fk_likes_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_likes_posts1`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
