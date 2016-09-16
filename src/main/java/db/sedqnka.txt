@@ -33,14 +33,29 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`admins`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`admins` (
+  `admin_id` INT(11) NOT NULL,
+  PRIMARY KEY (`admin_id`),
+  CONSTRAINT `admin_id`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`friends`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`friends` (
   `user1_id` INT(11) NOT NULL,
   `user2_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user2_id`, `user1_id`),
   INDEX `user2_id_idx` (`user2_id` ASC),
   INDEX `user1_id_idx` (`user1_id` ASC),
-  PRIMARY KEY (`user2_id`, `user1_id`),
   CONSTRAINT `fk_user1_id`
     FOREIGN KEY (`user1_id`)
     REFERENCES `mydb`.`users` (`user_id`)
@@ -74,6 +89,90 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`posts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
+  `post_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `likes` INT(11) NULL DEFAULT NULL,
+  `comments` INT(11) NULL DEFAULT NULL,
+  `text` VARCHAR(45) NULL DEFAULT NULL,
+  `pic_path` VARCHAR(45) NULL DEFAULT NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`post_id`, `user_id`),
+  INDEX `fk_posts_users1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_posts_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`comments`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
+  `comment_id` INT(11) NOT NULL,
+  `text` MEDIUMTEXT NULL DEFAULT NULL,
+  `post_id` INT(11) NOT NULL,
+  PRIMARY KEY (`comment_id`),
+  INDEX `fk_comments_posts1_idx` (`post_id` ASC),
+  CONSTRAINT `fk_comments_posts1`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`common_walls`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`common_walls` (
+  `user_id` INT(11) NOT NULL,
+  `post_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `post_id_idx` (`post_id` ASC),
+  CONSTRAINT `post_id`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`likes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`likes` (
+  `user_id` INT(11) NOT NULL,
+  `post_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `fk_likes_users1_idx` (`user_id` ASC),
+  INDEX `fk_likes_posts1_idx` (`post_id` ASC),
+  CONSTRAINT `fk_likes_posts1`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_likes_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`messages`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`messages` (
@@ -90,114 +189,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`messages` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`admins`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`admins` (
-  `admin_id` INT NOT NULL,
-  PRIMARY KEY (`admin_id`),
-  CONSTRAINT `admin_id`
-    FOREIGN KEY (`admin_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`posts`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
-  `post_id` INT NOT NULL AUTO_INCREMENT,
-  `likes` INT NULL,
-  `comments` INT NULL,
-  `text` VARCHAR(45) NULL,
-  `pic_path` VARCHAR(45) NULL,
-  PRIMARY KEY (`post_id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`common_walls`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`common_walls` (
-  `user_id` INT NOT NULL,
-  `post_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `post_id`),
-  INDEX `post_id_idx` (`post_id` ASC),
-  CONSTRAINT `user_id`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `post_id`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`personal_walls`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`personal_walls` (
-  `user_id` INT NOT NULL,
-  `post_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `post_id`),
-  INDEX `post_id_idx` (`post_id` ASC),
-  CONSTRAINT `user_id0`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `post_id0`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`comments`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
-  `comment_id` INT NOT NULL,
-  `text` MEDIUMTEXT NULL,
-  `post_id` INT NOT NULL,
-  PRIMARY KEY (`comment_id`),
-  INDEX `fk_comments_posts1_idx` (`post_id` ASC),
-  CONSTRAINT `fk_comments_posts1`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`likes`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`likes` (
-  `user_id` INT(11) NOT NULL,
-  `post_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `post_id`),
-  INDEX `fk_likes_users1_idx` (`user_id` ASC),
-  INDEX `fk_likes_posts1_idx` (`post_id` ASC),
-  CONSTRAINT `fk_likes_users1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_likes_posts1`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

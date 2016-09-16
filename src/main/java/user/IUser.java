@@ -52,7 +52,7 @@ public interface IUser {
 
 	// ---------------------------------------
 	// trie profila ot userStatus
-	public abstract void deleteProfile(String password, String email) throws UserStatusException;
+	public abstract void deleteProfile(String password, String email) throws UserStatusException, UserException;
 
 	// izlizame ot accounta, zarejda ni guest stranicata
 	public abstract void logout();

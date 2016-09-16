@@ -16,6 +16,7 @@ import chat.Chat;
 import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
+import db.UserDAO;
 import user.exceptions.UserException;
 import user.exceptions.UserStatusException;
 import wall.CommonWall;
@@ -158,6 +159,8 @@ public class User implements IUser {
 
 		if (post != null) {
 			post.addLike(this.getFirstName() + " " + this.getLastName());
+			
+//			new UserDAO().addLike(post,this);
 		} else {
 			throw new UserException("Invalid post! ");
 		}
@@ -324,7 +327,7 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void deleteProfile(String password, String email) throws UserStatusException {
+	public void deleteProfile(String password, String email) throws UserStatusException, UserException {
 
 		// Validation
 
@@ -332,6 +335,10 @@ public class User implements IUser {
 			this.status.removeUser(email);
 			// We need to set all references of this user to null(set this user
 			// to null in his friends, friend's list)
+			
+			new UserDAO().deleteUser(this);
+
+			
 		} else {
 			System.out.println("Invalid password or email. The profile hasn't been deleted");
 		}
@@ -400,5 +407,18 @@ public class User implements IUser {
 			}
 		}
 		throw new UserException("There's no user with this name!");
+	}
+
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return this.password;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public LocalDate getBirthdayDate() {
+		return birthdayDate;
 	}
 }

@@ -2,6 +2,7 @@ package user;
 
 import java.util.List;
 
+import user.exceptions.UserException;
 import user.exceptions.UserStatusException;
 
 public interface IUserStatus {
@@ -9,7 +10,7 @@ public interface IUserStatus {
 	boolean containsUser(String email);
 
 	//dobavqme go v sistemata pri registraciq
-	void addUser(User user);
+	void addUser(User user) throws UserException;
 
 	//mahame go pri banvane ili iztrivane na profila
 	void removeUser(String email) throws UserStatusException;
