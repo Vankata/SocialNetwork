@@ -81,7 +81,7 @@ public class User implements IUser {
 		}
 	}
 
-	public void setPassword(String password) throws UserException {
+	private void setPassword(String password) throws UserException {
 		if (password == null || password.length() == 0) {
 			throw new UserException("You are trying to set an immaginary password!");
 		} else {
@@ -89,7 +89,7 @@ public class User implements IUser {
 		}
 	}
 
-	public void setFirstName(String firstName) throws UserException {
+	private void setFirstName(String firstName) throws UserException {
 		if (firstName == null || firstName.length() == 0) {
 			throw new UserException("You are trying to set an invalid firstName!");
 		} else {
@@ -98,7 +98,7 @@ public class User implements IUser {
 
 	}
 
-	public void setLastName(String lastName) throws UserException {
+	private void setLastName(String lastName) throws UserException {
 		if (lastName == null || lastName.length() == 0) {
 			throw new UserException("You are trying to set an invalid lastName!");
 		} else {
@@ -106,6 +106,7 @@ public class User implements IUser {
 		}
 	}
 
+	//DAO method done
 	public void setPhoneNumber(String phoneNumber) throws UserException {
 
 		if (phoneNumber == null || phoneNumber.length() == 0) {
@@ -113,6 +114,7 @@ public class User implements IUser {
 		} else {
 			if (phoneNumber.matches("[0]+[8]+[7-9]{1}[0-9]{7}")) {
 				this.phoneNumber = phoneNumber;
+				new UserDAO().setPhoneNumber(this, phoneNumber);
 			} else {
 				throw new UserException("Invalid phone number");
 			}
@@ -131,12 +133,15 @@ public class User implements IUser {
 
 	/// ----------------------------------------------------------
 
+	
+	//DAO method done
 	public void setBirthdayDate(LocalDate birthdayDate) throws UserException {
 		if (birthdayDate == null) {
 			throw new UserException("Invalid input for BirthDay");
 		}
 
 		this.birthdayDate = birthdayDate;
+		new UserDAO().setBirthdayDate(this, birthdayDate);
 	}
 
 	public void setProfilePicture(Photo profilePicture) throws UserException {
@@ -150,6 +155,8 @@ public class User implements IUser {
 
 		if (newChat != null) {
 			this.chats.put(friend, newChat);
+			new UserDAO().addNewChat(friend, this);
+			new UserDAO().addNewChat(this, friend);
 		} else {
 			throw new UserException("Invalid chat! ");
 		}
@@ -160,7 +167,7 @@ public class User implements IUser {
 		if (post != null) {
 			post.addLike(this.getFirstName() + " " + this.getLastName());
 			
-//			new UserDAO().addLike(post,this);
+//			new PostDAO().addLike(post,this);
 		} else {
 			throw new UserException("Invalid post! ");
 		}

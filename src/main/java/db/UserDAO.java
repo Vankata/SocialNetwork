@@ -5,8 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import javax.swing.text.DateFormatter;
+
+import com.mysql.jdbc.RowDataCursor;
 
 import user.User;
 import user.exceptions.UserException;
@@ -15,7 +21,12 @@ public class UserDAO {
 
 	private static final String INSERT_USER_SQL = "INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_USER_SQL = "DELETE FROM users WHERE email = ?";
-
+	private static final String SET_PHONE_NUMBER_SQL = "UPDATE users SET phone_number = ? WHERE email = ?";
+	private static final String SET_BIRTHDAY_DATE_SQL = "UPDATE users SET birthday = ? WHERE email = ?";
+	private static final String GET_USER_ID_BY_EMAIL_SQL = "SELECT user_id FROM users WHERE email = ?";
+	private static final String INSERT_CHAT_SQL = "INSERT INTO chats VALUES (null, ?, ?)";
+	
+	
 	public int registerUser(User user) throws UserException {
 		Connection connection = DBConnection.getInstance().getConnection();
 
@@ -26,8 +37,12 @@ public class UserDAO {
 			ps.setString(3, user.getFirstName());
 			ps.setString(4, user.getLastName());
 			ps.setString(5, user.getPhoneNumber());
-			// TODO
-			ps.setString(6, null);
+			// TODO moje i da bachka
+			//LocalDate ld = user.getBirthdayDate();
+			//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			//Timestamp ts = Timestamp.valueOf(ld.toString());
+			ps.setTimestamp(6, null);
+			
 			ps.executeUpdate();
 
 			ResultSet rs = ps.getGeneratedKeys();
@@ -50,6 +65,64 @@ public class UserDAO {
 		} catch (SQLException e) {
 			throw new UserException("User cannot be delete now, please try again later.", e);
 		}
+	}
+	
+	public void setPhoneNumber(User user, String phoneNumber) throws UserException{
+		Connection connection = DBConnection.getInstance().getConnection();
+		
+		try{
+			PreparedStatement pstmt = connection.prepareStatement(SET_PHONE_NUMBER_SQL);
+			pstmt.setString(1, phoneNumber);
+			pstmt.setString(2, user.getEmail());
+			
+			pstmt.executeUpdate();
+		}catch(SQLException e){
+			throw new UserException("You cannot update your phone number rigth now! Please try again later! ");
+		}
+	}
+
+	public void setBirthdayDate(User user, LocalDate birthdayDate) throws UserException {
+	Connection connection = DBConnection.getInstance().getConnection();
+		
+		try{
+			PreparedStatement pstmt = connection.prepareStatement(SET_BIRTHDAY_DATE_SQL);
+			Timestamp timestamp = Timestamp.valueOf(birthdayDate.atStartOfDay());
+			pstmt.setTimestamp(1, timestamp);
+			pstmt.setString(2, user.getEmail());
+			
+			pstmt.executeUpdate();
+		}catch(SQLException e){
+			throw new UserException("You cannot update your birthday date rigth now! Please try again later! ");
+		}		
+	}
+
+	public void addNewChat(User friend, User user) throws UserException {
+		Connection connection = DBConnection.getInstance().getConnection();
+		
+		try{
+			PreparedStatement pstmt1 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
+			pstmt1.setString(1, friend.getEmail()); 
+			ResultSet rs = pstmt1.executeQuery();
+			rs.next();
+			int user1_id = rs.getInt(1);
+			
+			PreparedStatement pstmt2 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
+			pstmt2.setString(1, user.getEmail()); 
+			ResultSet rs1 = pstmt1.executeQuery();
+			rs1.next();
+			int user2_id = rs1.getInt(1);
+			
+			PreparedStatement pstmt = connection.prepareStatement(INSERT_CHAT_SQL);
+			
+			pstmt.setInt(1, user1_id);
+			pstmt.setInt(2, user2_id);
+
+			pstmt.executeUpdate();
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			throw new UserException("You cannot add new chat rigth now! Please try again later! ");
+		}		
 	}
 
 }

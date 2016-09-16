@@ -1,7 +1,9 @@
 package main;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.print.attribute.standard.PDLOverrideSupported;
@@ -162,12 +164,16 @@ public class Demo {
 		
 		
 		
-		
-		
 		Guest vankata = new Guest();
 		vankata.signIn("vancyki@abv.bg", "Abcde1234", "Ivan", "Kolev");
 		User vankataUser = vankata.logIn("vancyki@abv.bg", "Abcde1234");
-		vankataUser.deleteProfile("Abcde1234", "vancyki@abv.bg");
+		Guest vesko = new Guest();
+		vesko.signIn("veskoloshiq@abv.bg", "123dasDWJDO", "Veskoi", "Loshiq");
+		User veskoUSer = vesko.logIn("veskoloshiq@abv.bg", "123dasDWJDO");
+		veskoUSer.addFriend(vankataUser);
+		//vankataUser.deleteProfile("Abcde1234", "vancyki@abv.bg");
+		vankataUser.setPhoneNumber("0878788032");
+		vankataUser.setBirthdayDate(LocalDate.now());
 		
 		
 		
