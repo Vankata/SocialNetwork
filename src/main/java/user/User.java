@@ -1,6 +1,7 @@
 package user;
 
 import java.io.BufferedWriter;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,9 +14,11 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import chat.Chat;
+import chat.Message;
 import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
+import db.ChatDAO;
 import db.UserDAO;
 import user.exceptions.UserException;
 import user.exceptions.UserStatusException;
@@ -34,6 +37,7 @@ public class User implements IUser {
 	private String email;
 	private String firstName;
 	private String lastName;
+	private int userID;
 	// -------------------------
 	// pri update info ili pri registraciq(izbiratelnpo)
 	private String phoneNumber;
@@ -122,7 +126,7 @@ public class User implements IUser {
 		}
 
 	}
-
+	
 	// Only for test
 	@Override
 	public String toString() {
@@ -155,8 +159,7 @@ public class User implements IUser {
 
 		if (newChat != null) {
 			this.chats.put(friend, newChat);
-			new UserDAO().addNewChat(friend, this);
-			new UserDAO().addNewChat(this, friend);
+		
 		} else {
 			throw new UserException("Invalid chat! ");
 		}
@@ -257,18 +260,21 @@ public class User implements IUser {
 	}
 
 	@Override
-	public void addFriend(User user) throws UserException, ChatBoxException {
+	public void addFriend(User user) throws UserException, ChatBoxException, SQLException {
 		// TODO Auto-generated method stub
 		// VANKATA: promenqm malko, realiziram chata2
 		if (!this.hasThisFriend(user)) {
 			this.friends.put(user.getEmail(), user);
 		}
 
+		Chat chat = new Chat();
+		
 		if (!user.hasThisFriend(this)) {
 			user.addFriend(this);
+			new UserDAO().addNewFriendDB(user, this);
+			new ChatDAO().addNewChatDB(chat, user, this);
 		}
 
-		Chat chat = new Chat();
 		this.addNewChat(user, chat);
 		user.addNewChat(this, chat);
 	}
@@ -377,7 +383,9 @@ public class User implements IUser {
 	@Override
 	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
 		if (this.hasThisFriend(friend)) {
-			this.getChatbyUser(friend).addMessage(message);
+			Message message1 = this.getChatbyUser(friend).addMessage(message);
+			new ChatDAO().addNewMessage(friend.getChatbyUser(this), this.getUserID(), message1);
+			
 		} else {
 			throw new UserException("Invalid friend! ");
 		}
@@ -427,5 +435,13 @@ public class User implements IUser {
 
 	public LocalDate getBirthdayDate() {
 		return birthdayDate;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+
+	public int getUserID() {
+		return userID;
 	}
 }

@@ -15,17 +15,19 @@ public class Chat {
 
 	private LocalDateTime timeOfLastMessage;
 	private List<Message> messages = new LinkedList<Message>();
+	private int id;
 	
 	public Chat() {
 		this.timeOfLastMessage = LocalDateTime.now();
 	}
 
 
-	public void addMessage(String text) throws ChatException, MessageException {
+	public Message addMessage(String text) throws ChatException, MessageException {
 		if(text != null && text.trim().length() > 0){
 			Message newMessage = new Message(text);
 			this.messages.add(newMessage);
 			this.timeOfLastMessage = newMessage.getTimeOfTheMessage();
+			return newMessage;
 		}else{
 			throw new ChatException("Invalid message! ");
 		}
@@ -39,6 +41,16 @@ public class Chat {
 
 	public LocalDateTime getTimeOfLastMessage() {
 		return timeOfLastMessage;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

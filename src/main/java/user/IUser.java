@@ -1,5 +1,7 @@
 package user;
 
+import java.sql.SQLException;
+
 import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
@@ -37,7 +39,7 @@ public interface IUser {
 
 	// ---------------------------------------
 	// proverqvame dali syshtestvuva v userStatus i dali veche go imame
-	public abstract void addFriend(User user) throws UserException, ChatBoxException;
+	public abstract void addFriend(User user) throws UserException, ChatBoxException, SQLException;
 
 	// proverqvame dali go imame v priqteli
 	public abstract String removeFirend(User user) throws UserException;

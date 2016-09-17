@@ -28,4 +28,8 @@ public class Message {
 	public String toString() {
 		return "Message [timeOfTheMessage=" + timeOfTheMessage + ", message=" + message + "]";
 	}
+
+	public String getMessage() {
+		return message;
+	}
 }

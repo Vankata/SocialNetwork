@@ -25,6 +25,7 @@ public class UserDAO {
 	private static final String SET_BIRTHDAY_DATE_SQL = "UPDATE users SET birthday = ? WHERE email = ?";
 	private static final String GET_USER_ID_BY_EMAIL_SQL = "SELECT user_id FROM users WHERE email = ?";
 	private static final String INSERT_CHAT_SQL = "INSERT INTO chats VALUES (null, ?, ?)";
+	private static final String INSERT_FRIEND_SQL = "INSERT INTO friends VALUES (?, ?)";
 	
 	
 	public int registerUser(User user) throws UserException {
@@ -47,6 +48,8 @@ public class UserDAO {
 
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
+			
+			user.setUserID(rs.getInt(1));
 			return rs.getInt(1);
 		} catch (SQLException e) {
 			throw new UserException("User cannot be registered now, please try again later.", e);
@@ -96,33 +99,42 @@ public class UserDAO {
 		}		
 	}
 
-	public void addNewChat(User friend, User user) throws UserException {
+	public void addNewFriendDB(User friend, User user) throws UserException {
 		Connection connection = DBConnection.getInstance().getConnection();
 		
 		try{
+			/*
 			PreparedStatement pstmt1 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
 			pstmt1.setString(1, friend.getEmail()); 
 			ResultSet rs = pstmt1.executeQuery();
 			rs.next();
-			int user1_id = rs.getInt(1);
+			*/
+			int user1_id = friend.getUserID();
 			
+					/*
 			PreparedStatement pstmt2 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
 			pstmt2.setString(1, user.getEmail()); 
-			ResultSet rs1 = pstmt1.executeQuery();
+			ResultSet rs1 = pstmt2.executeQuery();
 			rs1.next();
-			int user2_id = rs1.getInt(1);
+			*/
+			int user2_id = user.getUserID();
 			
-			PreparedStatement pstmt = connection.prepareStatement(INSERT_CHAT_SQL);
+			PreparedStatement pstmt3 = connection.prepareStatement(INSERT_FRIEND_SQL);
+			pstmt3.setInt(1, user1_id);
+			pstmt3.setInt(2, user2_id);
 			
-			pstmt.setInt(1, user1_id);
-			pstmt.setInt(2, user2_id);
-
-			pstmt.executeUpdate();
+			pstmt3.executeUpdate();
+			
+			//new ChatDAO().addNewChatDB(connection, user1_id, user2_id);
 			
 		}catch(SQLException e){
 			e.printStackTrace();
 			throw new UserException("You cannot add new chat rigth now! Please try again later! ");
 		}		
 	}
+
+	
+	
+
 
 }
