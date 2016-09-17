@@ -24,6 +24,8 @@ public class Post {
 	// private final int id;
 	private User ownerOfThePost;
 	private Set<String> namesOfUsersLikedThisPost = new HashSet<String>();
+	private boolean isPhoto;
+	private int postID;
 
 	// key->PostId value->comment
 	private List<Post> comments = new ArrayList<Post>();
@@ -33,7 +35,7 @@ public class Post {
 		if (ownerOfThePost == null) {
 			throw new PostException("Invalid post owner");
 		}
-
+		this.isPhoto=false;
 		this.ownerOfThePost = ownerOfThePost;
 
 		if (text != null && text.trim().length() > 0) {
@@ -129,7 +131,32 @@ public class Post {
 
 	}
 
+	public boolean isPhoto() {
+		return isPhoto;
+	}
+
+	public void setPhoto(boolean isPhoto) {
+		this.isPhoto = isPhoto;
+	}
+
+	public int getNumberOfLikes() {
+		return numberOfLikes;
+	}
+
+	public int getNumberOfComments() {
+		return numberOfComments;
+	}
+
 	public String getText() {
 		return text;
 	}
+
+	public int getPostID() {
+		return postID;
+	}
+
+	public void setPostID(int postID) {
+		this.postID = postID;
+	}
+	
 }

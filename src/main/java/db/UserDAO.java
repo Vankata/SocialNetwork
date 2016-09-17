@@ -16,6 +16,7 @@ import com.mysql.jdbc.RowDataCursor;
 
 import user.User;
 import user.exceptions.UserException;
+import wall.Post
 
 public class UserDAO {
 
@@ -116,25 +117,19 @@ public class UserDAO {
 			pstmt2.setString(1, user.getEmail()); 
 			ResultSet rs1 = pstmt2.executeQuery();
 			rs1.next();
-			*/
-			int user2_id = user.getUserID();
-			
-			PreparedStatement pstmt3 = connection.prepareStatement(INSERT_FRIEND_SQL);
-			pstmt3.setInt(1, user1_id);
-			pstmt3.setInt(2, user2_id);
-			
-			pstmt3.executeUpdate();
-			
-			//new ChatDAO().addNewChatDB(connection, user1_id, user2_id);
-			
-		}catch(SQLException e){
+			int user2_id = rs1.getInt(1);
+
+			PreparedStatement pstmt = connection.prepareStatement(INSERT_CHAT_SQL);
+
+			pstmt.setInt(1, user1_id);
+			pstmt.setInt(2, user2_id);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("You cannot add new chat rigth now! Please try again later! ");
-		}		
+		}
 	}
-
-	
-	
-
 
 }

@@ -39,9 +39,9 @@ public interface IUser {
 
 	// ---------------------------------------
 	// proverqvame dali syshtestvuva v userStatus i dali veche go imame
-	public abstract void addFriend(User user) throws UserException, ChatBoxException, SQLException;
+	public abstract void addFriend(User user) throws UserException, ChatBoxException;
 
-	// proverqvame dali go imame v priqteli
+	// proverqvame dali go imame v priqtel
 	public abstract String removeFirend(User user) throws UserException;
 
 	// pokazva infoto na friend

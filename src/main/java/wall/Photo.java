@@ -16,6 +16,7 @@ public class Photo extends Post {
 		}else{
 			throw new PhotoException("Invalid photo! ");
 		}
+		super.setPhoto(true);
 	}
 
 	//Only for test
@@ -25,6 +26,10 @@ public class Photo extends Post {
 		return "Photo [pathToThePhoto=" + pathToThePhoto + "]";
 	}
 	//-----------------------
+
+	public String getPathToThePhoto() {
+		return pathToThePhoto;
+	}
 	
 
 }
