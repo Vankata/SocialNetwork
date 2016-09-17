@@ -26,6 +26,7 @@ public class Post {
 	private Set<String> namesOfUsersLikedThisPost = new HashSet<String>();
 	private boolean isPhoto;
 	private int postID;
+	private int userID;
 
 	// key->PostId value->comment
 	private List<Post> comments = new ArrayList<Post>();
@@ -158,6 +159,14 @@ public class Post {
 
 	public void setPostID(int postID) {
 		this.postID = postID;
+	}
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
 	}
 	
 }

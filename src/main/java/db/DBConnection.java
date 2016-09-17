@@ -7,11 +7,11 @@ public class DBConnection {
 	private Connection connection;
 	private static DBConnection theChosenOneDBConnection;
 	
-	private static final String DB_HOSTNAME = "localhost";
+	private static final String DB_HOSTNAME = "127.0.0.1";
 	private static final String DB_PORT = "3306";
 	private static final String DATABASE = "mydb?useSSL=false";
 	private static final String DB_USER = "root";
-	private static final String DB_PASSWORD = "";
+	private static final String DB_PASSWORD = "klavqtura";
 	
 	private DBConnection() {
 		try {

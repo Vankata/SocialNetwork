@@ -18,7 +18,7 @@ public interface IUser {
 
 	public abstract void commentPost(Post post, String comment) throws PostException, UserException;
 
-	public abstract void deletePost(Post post) throws UserException, WallException;
+	public abstract void deletePost(Post post) throws UserException, WallException, PostException;
 
 	public abstract Photo postPicture(String pathToThePhoto, String text)
 			throws UserException, PostException, PhotoException, WallException;

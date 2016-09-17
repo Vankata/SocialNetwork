@@ -20,7 +20,8 @@ public class UserDAO {
 	private static final String SET_BIRTHDAY_DATE_SQL = "UPDATE users SET birthday = ? WHERE email = ?";
 	private static final String GET_USER_ID_BY_EMAIL_SQL = "SELECT user_id FROM users WHERE email = ?";
 	private static final String INSERT_FRIEND_SQL = "INSERT INTO friends VALUES (?, ?)";
-	
+	private static final String DELETE_FRIEND_SQL = "DELETE FROM friends WHERE user1_id = ? AND user2_id= ?";
+
 	
 	public int registerUser(User user) throws UserException {
 		Connection connection = DBConnection.getInstance().getConnection();
@@ -116,6 +117,31 @@ public class UserDAO {
 
 			pstmt.setInt(2, user1_id);
 			pstmt.setInt(1, user2_id);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new UserException("You cannot add new chat rigth now! Please try again later! ");
+		}
+	}
+	
+	public void deleteFriendDB(User friend, User user) throws UserException {
+		Connection connection = DBConnection.getInstance().getConnection();
+		
+		try{
+//			int user1_id = friend.getUserID();
+			
+//					
+//			PreparedStatement pstmt2 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
+//			pstmt2.setString(1, user.getEmail()); 
+//			ResultSet rs1 = pstmt2.executeQuery();
+//			rs1.next();
+//			int user2_id = rs1.getInt(1);
+
+			PreparedStatement pstmt = connection.prepareStatement(DELETE_FRIEND_SQL);
+			pstmt.setInt(1, user.getUserID());
+			pstmt.setInt(2, friend.getUserID());
 
 			pstmt.executeUpdate();
 

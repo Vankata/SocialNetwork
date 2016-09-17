@@ -65,7 +65,7 @@ public class UserStatus implements IUserStatus {
 		return instance;
 	}
 
-	@Override
+//	@Override
 	public boolean containsUser(String email) {
 		
 		for (User user : allUsers.values()) {
@@ -77,14 +77,14 @@ public class UserStatus implements IUserStatus {
 
 	// dobavqme go v sistemata pri registraciq
 
-	@Override
+//	@Override
 	public void addUser(User user) throws UserException {
 		allUsers.put(user.getEmail(), user);
 		user.setUserID(new UserDAO().registerUser(user));;
 	}
 
 	// mahame go pri banvane ili iztrivane na profila
-	@Override
+//	@Override
 	public void removeUser(String email) throws UserStatusException {
 		if ((email != null) && (email.trim().length() > 0)) {
 			if (allUsers.containsKey(email)) {

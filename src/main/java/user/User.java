@@ -46,8 +46,7 @@ public class User implements IUser {
 	// -------------------------
 	// <email, user>
 	private Map<String, User> friends = new HashMap<String, User>();
-	private Map<User, Chat> chats = new TreeMap<User, Chat>(
-			(user1, user2) -> user1.getEmail().compareTo(user2.getEmail()));
+	private Map<User, Chat> chats = new TreeMap<User, Chat>((user1, user2) -> user1.getEmail().compareTo(user2.getEmail()));
 	private PersonalWall personalWall;
 	private CommonWall commonWall;
 	private Photo profilePicture;
@@ -165,7 +164,7 @@ public class User implements IUser {
 			throw new UserException("Invalid chat! ");
 		}
 	}
-
+// DAO  done
 	public void likePost(Post post) throws WallException, PostException, UserException {
 
 		if (post != null) {
@@ -213,8 +212,8 @@ public class User implements IUser {
 	 * }
 	 * 
 	 */
-
-	@Override
+//DAO dona
+//	@Override
 	public void commentPost(Post post, String comment) throws PostException, UserException {
 
 		if (post != null) {
@@ -225,9 +224,9 @@ public class User implements IUser {
 		}
 
 	}
-
-	@Override
-	public void deletePost(Post post) throws UserException, WallException {
+//DAO done
+//	@Override
+	public void deletePost(Post post) throws UserException, WallException, PostException {
 		if (post == null) {
 			throw new UserException("Invalid Post to delete!");
 		}
@@ -235,6 +234,7 @@ public class User implements IUser {
 		this.personalWall.removePost(post);
 		if(this.commonWall.containsPost(post)){
 			this.commonWall.removePost(post);
+			new PostDAO().deletePost(this, post);
 		}
 	}
 
@@ -245,8 +245,8 @@ public class User implements IUser {
 	 * 
 	 * }
 	 */
-
-	@Override
+//DAO done
+//	@Override
 	public Photo postPicture(String pathToThePhoto, String text)
 			throws UserException, PostException, PhotoException, WallException {
 
@@ -254,16 +254,17 @@ public class User implements IUser {
 			Photo newPhoto = new Photo(text, pathToThePhoto, this);
 			this.personalWall.addPost(newPhoto);
 			this.commonWall.addPost(newPhoto);
+			new PostDAO().addPost(this, newPhoto);
 			return newPhoto;
 		} else {
 			throw new UserException("Invalid picture! ");
 		}
 
 	}
-	
+//	DAO done
 	public Post post(String text) throws UserException, PostException, WallException {
 		
-		if (text == null && text.trim().length() == 0) {
+		if (text == null || text.trim().length() == 0) {
 			throw new UserException("Invalid Post! ");
 		}
 		
@@ -274,8 +275,8 @@ public class User implements IUser {
 		new PostDAO().addPost(this, post);
 		return post;
 	}
-
-	@Override
+//DAO done
+//	@Override
 	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
 		// VANKATA: promenqm malko, realiziram chata2
@@ -308,7 +309,7 @@ public class User implements IUser {
 		}
 	}
 
-	@Override
+//	@Override
 	public String removeFirend(User friend) throws UserException {
 
 		if (friend == null) {
@@ -325,7 +326,7 @@ public class User implements IUser {
 
 	}
 
-	@Override
+//	@Override
 	public String reviewFriendInfo(User friend) throws UserException {
 
 		if (friend == null) {
@@ -342,7 +343,7 @@ public class User implements IUser {
 
 	}
 
-	@Override
+//	@Override
 	public PersonalWall reviewFriendWall(String name, String lastName) throws Exception {
 		User searchedUser = this.searchUser(name, lastName);
 		if ((searchedUser != null) && (this.friends.containsKey(searchedUser.getEmail()))) {
@@ -355,7 +356,7 @@ public class User implements IUser {
 		return commonWall;
 	}
 
-	@Override
+//	@Override
 	public void deleteProfile(String password, String email) throws UserStatusException, UserException {
 
 		// Validation
@@ -378,7 +379,7 @@ public class User implements IUser {
 		return ((string != null) && (string.trim().length() > 0));
 	}
 
-	@Override
+//	@Override
 	public void logout() {
 		System.out.println(this.firstName + " " + this.lastName + "logged out");
 
@@ -396,7 +397,7 @@ public class User implements IUser {
 		return email;
 	}
 
-	@Override
+//	@Override
 	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
 		if (this.hasThisFriend(friend)) {
 			Message message1 = this.getChatbyUser(friend).addMessage(message);
@@ -416,7 +417,7 @@ public class User implements IUser {
 		}
 	}
 
-	@Override
+//	@Override
 	public void reviewChat(User friend) throws UserException {
 		this.getChatbyUser(friend).printChat();
 	}

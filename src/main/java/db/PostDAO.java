@@ -20,6 +20,7 @@ public class PostDAO {
 	private static final String INSERT_COMMENT_SQL = "INSERT INTO comments VALUES (null, ?, ?, ?)";
 	private static final String INSERT_LIKE_SQL = "INSERT INTO likes VALUES (?, ?)";
 	private static final String DELETE_LIKE_SQL = "DELETE FROM likes WHERE user_id = ? AND post_id = ?";;
+	private static final String DELETE_POST_SQL = "DELETE FROM posts WHERE post_id = ?";;
 
 	public int addPost(User user, Post post) throws PostException {
 		Connection connection = DBConnection.getInstance().getConnection();
@@ -43,6 +44,7 @@ public class PostDAO {
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			post.setPostID(rs.getInt(1));
+//			post.setUserID(rs.getInt(6));
 			return rs.getInt(1);
 		} catch (SQLException e) {
 			throw new PostException("Post cannot be added now, please try again later.", e);
@@ -61,7 +63,7 @@ public class PostDAO {
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new PostException("You cannot like this post rigth now! Please try again later! ", e);
+			throw new PostException("You cannot comment this post rigth now! Please try again later! ", e);
 		}
 
 	}
@@ -89,6 +91,21 @@ public class PostDAO {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new PostException("You cannot like it  rigth now! Please try again later! ", e);
+		}
+
+	}
+
+	public void deletePost(User user, Post post) throws PostException {
+		Connection connection = DBConnection.getInstance().getConnection();
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(DELETE_POST_SQL, Statement.RETURN_GENERATED_KEYS);
+			System.out.println("Na posta ID " + post.getPostID());
+			pstmt.setInt(1, post.getPostID());
+//			if (user.getUserID() == post.getUserID()) {
+				pstmt.executeUpdate();
+//			}
+		} catch (SQLException e) {
+			throw new PostException("You cannot delete this post rigth now! Please try again later! ", e);
 		}
 
 	}

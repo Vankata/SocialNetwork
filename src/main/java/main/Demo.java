@@ -164,25 +164,29 @@ public class Demo {
 		
 		
 //		
-	Guest vankata = new Guest();
+//	Guest vankata = new Guest();
 //		vankata.signIn("vancyki@abv.bg", "Abcde1234", "Ivan", "Kolev");
-		User vankataUser = vankata.logIn("vancyki@abv.bg", "Abcde1234");
-		Guest vesko = new Guest();
+//		User vankataUser = vankata.logIn("vancyki@abv.bg", "Abcde1234");
+//		Guest vesko1 = new Guest();
 //		vesko.signIn("veskoloshiq@abv.bg", "123dasDWJDO", "Veskoi", "Loshiq");
-		User veskoUSer = vesko.logIn("veskoloshiq@abv.bg", "123dasDWJDO");
+//		User veskoUSer1 = vesko1.logIn("barilska_@abv.bg", "123dasDWJDO");
 //		veskoUSer.addFriend(vankataUser);
 		//vankataUser.deleteProfile("Abcde1234", "vancyki@abv.bg");
 //		vankataUser.setPhoneNumber("0878788032");
 //		vankataUser.setBirthdayDate(LocalDate.now());
 		
-		vankataUser.post( "adsdasd23fosdaifvw2jfgosEFJKDQ");
+//		Post post = veskoUSer1.post( "adsdasd23fosdaifvw2jfgosEFJKDQ");
+//		vankataUser.commentPost(post, "Tetrissssssss");
 		
-		Post post = vankataUser.post( "adsdasd23fosdaifvw2jfgosEFJKDQ");
-		vankataUser.commentPost(post, "Tetrissssssss");
+//		vankataUser.likePost(post);
 		
-		vankataUser.likePost(post);
-		
-		
+		Guest mimi= new Guest();
+		 mimi.signIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^", "Mariq", "Ivanova");
+		 User mimiUser=mimi.logIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^");
+		 Photo photo=mimiUser.postPicture("src\\potos\\cat.jpg", "koteto");
+//		 Post post1= mimiUser.post("A tova?!");
+//		mimiUser.deletePost(post1); 
+		 mimiUser.deletePost(photo);
 	}
 
 }
