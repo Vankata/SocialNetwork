@@ -19,6 +19,7 @@ import chat.exceptions.ChatBoxException;
 import chat.exceptions.ChatException;
 import chat.exceptions.MessageException;
 import db.ChatDAO;
+import db.PostDAO;
 import db.UserDAO;
 import user.exceptions.UserException;
 import user.exceptions.UserStatusException;
@@ -169,7 +170,7 @@ public class User implements IUser {
 
 		if (post != null) {
 			post.addLike(this.getFirstName() + " " + this.getLastName());
-			
+			new PostDAO().liketPost(this, post);
 //			new PostDAO().addLike(post,this);
 		} else {
 			throw new UserException("Invalid post! ");
@@ -218,6 +219,7 @@ public class User implements IUser {
 
 		if (post != null) {
 			post.addComment(this, comment);
+			new PostDAO().commentPost(this, post, comment);
 		} else {
 			throw new UserException("Invalid post! ");
 		}
@@ -258,9 +260,23 @@ public class User implements IUser {
 		}
 
 	}
+	
+	public Post post(String text) throws UserException, PostException, WallException {
+		
+		if (text == null && text.trim().length() == 0) {
+			throw new UserException("Invalid Post! ");
+		}
+		
+		Post post = new Post(text, this);
+		this.personalWall.addPost(post);
+		this.commonWall.addPost(post);
+		System.out.println(email + " " + userID);
+		new PostDAO().addPost(this, post);
+		return post;
+	}
 
 	@Override
-	public void addFriend(User user) throws UserException, ChatBoxException, SQLException {
+	public void addFriend(User user) throws UserException, ChatBoxException {
 		// TODO Auto-generated method stub
 		// VANKATA: promenqm malko, realiziram chata2
 		if (!this.hasThisFriend(user)) {

@@ -99,14 +99,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
   `text` VARCHAR(45) NULL DEFAULT NULL,
   `pic_path` VARCHAR(45) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
-  PRIMARY KEY (`post_id`, `user_id`),
-  INDEX `fk_posts_users1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_posts_users1`
+  PRIMARY KEY (`post_id`),
+  INDEX `user_id_idx` (`user_id` ASC),
+  CONSTRAINT `fk_user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `mydb`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 34
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -114,7 +115,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `mydb`.`comments`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
-  `comment_id` INT(11) NOT NULL,
+  `comment_id` INT(11) NOT NULL AUTO_INCREMENT,
   `text` MEDIUMTEXT NULL DEFAULT NULL,
   `post_id` INT(11) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -132,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 14
 DEFAULT CHARACTER SET = utf8;
 
 

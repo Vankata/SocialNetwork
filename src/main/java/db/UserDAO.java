@@ -19,7 +19,6 @@ public class UserDAO {
 	private static final String SET_PHONE_NUMBER_SQL = "UPDATE users SET phone_number = ? WHERE email = ?";
 	private static final String SET_BIRTHDAY_DATE_SQL = "UPDATE users SET birthday = ? WHERE email = ?";
 	private static final String GET_USER_ID_BY_EMAIL_SQL = "SELECT user_id FROM users WHERE email = ?";
-	private static final String INSERT_CHAT_SQL = "INSERT INTO chats VALUES (null, ?, ?)";
 	private static final String INSERT_FRIEND_SQL = "INSERT INTO friends VALUES (?, ?)";
 	
 	
@@ -43,8 +42,8 @@ public class UserDAO {
 
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
-			
-			user.setUserID(rs.getInt(1));
+			System.out.println("==========" +rs.getInt(1));
+		//	user.setUserID(rs.getInt(1));
 			return rs.getInt(1);
 		} catch (SQLException e) {
 			throw new UserException("User cannot be registered now, please try again later.", e);
@@ -113,10 +112,10 @@ public class UserDAO {
 			rs1.next();
 			int user2_id = rs1.getInt(1);
 
-			PreparedStatement pstmt = connection.prepareStatement(INSERT_CHAT_SQL);
+			PreparedStatement pstmt = connection.prepareStatement(INSERT_FRIEND_SQL);
 
-			pstmt.setInt(1, user1_id);
-			pstmt.setInt(2, user2_id);
+			pstmt.setInt(2, user1_id);
+			pstmt.setInt(1, user2_id);
 
 			pstmt.executeUpdate();
 

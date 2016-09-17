@@ -24,9 +24,9 @@ public class ChatDAO {
 		PreparedStatement pstmt = connection.prepareStatement(INSERT_CHAT_SQL, Statement.RETURN_GENERATED_KEYS);
 		int user1_id = user1.getUserID();
 		int user2_id = user2.getUserID();
-		
-		pstmt.setInt(2, user1_id);
-		pstmt.setInt(1, user2_id);
+
+		pstmt.setInt(1, user1_id);
+		pstmt.setInt(2, user2_id);
 
 		pstmt.executeUpdate();
 		

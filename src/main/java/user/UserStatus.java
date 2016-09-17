@@ -25,6 +25,7 @@ public class UserStatus implements IUserStatus {
 	Map<String, User> allUsers;
 
 	private UserStatus() throws UserException {
+		System.out.println("=========================================================");
 		allUsers = new HashMap<String, User>();
 		
 		Connection connection = DBConnection.getInstance().getConnection();
@@ -40,11 +41,13 @@ public class UserStatus implements IUserStatus {
 				String firstName = rs.getString(4);
 				String lastName = rs.getString(5);
 				String phoneNumber = rs.getString(6);
+				int userID = rs.getInt(1);
 				
 				User user = new User(password, email, firstName, lastName, this);
 				//user.setPhoneNumber(phoneNumber);
-				
+				user.setUserID(userID);
 				this.allUsers.put(email, user);
+				System.out.println(allUsers.size());
 			}
 			
 
@@ -77,7 +80,7 @@ public class UserStatus implements IUserStatus {
 	@Override
 	public void addUser(User user) throws UserException {
 		allUsers.put(user.getEmail(), user);
-		new UserDAO().registerUser(user);
+		user.setUserID(new UserDAO().registerUser(user));;
 	}
 
 	// mahame go pri banvane ili iztrivane na profila

@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import db.PostDAO;
 import user.User;
 import wall.exceptions.PostException;
 
 public class Post {
 
-	/// private static int postId = 0;
 	private LocalDateTime timeOfThePost;
 	private String text;
 	private int numberOfLikes;
@@ -47,7 +47,7 @@ public class Post {
 		this.timeOfThePost = LocalDateTime.now();
 		this.numberOfLikes = 0;
 		this.numberOfComments = 0;
-		// this.id = postId++;
+		this.postID = ownerOfThePost.getUserID();
 	}
 
 	public void addNameOfUserWhoLikedThisPost(String name) {
@@ -94,6 +94,7 @@ public class Post {
 
 		this.numberOfComments++;
 		this.comments.add(new Post(comment, userThatLikeThePost));
+		
 	}
 
 	public String[] namesOfFriendsCommentedThePost() {

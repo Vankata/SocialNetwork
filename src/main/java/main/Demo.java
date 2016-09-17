@@ -163,18 +163,24 @@ public class Demo {
 		
 		
 		
-		
-		Guest vankata = new Guest();
-		vankata.signIn("vancyki@abv.bg", "Abcde1234", "Ivan", "Kolev");
+//		
+	Guest vankata = new Guest();
+//		vankata.signIn("vancyki@abv.bg", "Abcde1234", "Ivan", "Kolev");
 		User vankataUser = vankata.logIn("vancyki@abv.bg", "Abcde1234");
 		Guest vesko = new Guest();
-		vesko.signIn("veskoloshiq@abv.bg", "123dasDWJDO", "Veskoi", "Loshiq");
+//		vesko.signIn("veskoloshiq@abv.bg", "123dasDWJDO", "Veskoi", "Loshiq");
 		User veskoUSer = vesko.logIn("veskoloshiq@abv.bg", "123dasDWJDO");
-		veskoUSer.addFriend(vankataUser);
+//		veskoUSer.addFriend(vankataUser);
 		//vankataUser.deleteProfile("Abcde1234", "vancyki@abv.bg");
-		vankataUser.setPhoneNumber("0878788032");
-		vankataUser.setBirthdayDate(LocalDate.now());
+//		vankataUser.setPhoneNumber("0878788032");
+//		vankataUser.setBirthdayDate(LocalDate.now());
 		
+		vankataUser.post( "adsdasd23fosdaifvw2jfgosEFJKDQ");
+		
+		Post post = vankataUser.post( "adsdasd23fosdaifvw2jfgosEFJKDQ");
+		vankataUser.commentPost(post, "Tetrissssssss");
+		
+		vankataUser.likePost(post);
 		
 		
 	}
