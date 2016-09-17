@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users` (
   `password` VARCHAR(45) NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
-  `phone_number` VARCHAR(45) NOT NULL,
-  `birthday` VARCHAR(45) NOT NULL,
+  `phone_number` VARCHAR(45) NULL DEFAULT NULL,
+  `birthday` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 101
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -59,13 +59,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`friends` (
   CONSTRAINT `fk_user1_id`
     FOREIGN KEY (`user1_id`)
     REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_user2_id`
     FOREIGN KEY (`user2_id`)
     REFERENCES `mydb`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`chats` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 34
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
   `comments` INT(11) NULL DEFAULT NULL,
   `text` VARCHAR(45) NULL DEFAULT NULL,
   `pic_path` VARCHAR(45) NULL DEFAULT NULL,
-  `user_id` INT NOT NULL,
+  `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`post_id`, `user_id`),
   INDEX `fk_posts_users1_idx` (`user_id` ASC),
   CONSTRAINT `fk_posts_users1`
@@ -116,26 +117,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
   `comment_id` INT(11) NOT NULL,
   `text` MEDIUMTEXT NULL DEFAULT NULL,
   `post_id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`comment_id`),
   INDEX `fk_comments_posts1_idx` (`post_id` ASC),
+  INDEX `user_id_idx` (`user_id` ASC),
   CONSTRAINT `fk_comments_posts1`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`common_walls`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`common_walls` (
-  `user_id` INT(11) NOT NULL,
-  `post_id` INT(11) NOT NULL,
-  PRIMARY KEY (`user_id`, `post_id`),
-  INDEX `post_id_idx` (`post_id` ASC),
-  CONSTRAINT `post_id`
     FOREIGN KEY (`post_id`)
     REFERENCES `mydb`.`posts` (`post_id`)
     ON DELETE NO ACTION
@@ -176,7 +162,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `mydb`.`messages`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`messages` (
-  `message_id` INT(11) NOT NULL,
+  `message_id` INT(11) NOT NULL AUTO_INCREMENT,
   `time_of_the_message` DATETIME NOT NULL,
   `message` MEDIUMTEXT NOT NULL,
   `chat_id` INT(11) NOT NULL,
@@ -185,6 +171,28 @@ CREATE TABLE IF NOT EXISTS `mydb`.`messages` (
   CONSTRAINT `chat_id`
     FOREIGN KEY (`chat_id`)
     REFERENCES `mydb`.`chats` (`chat_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`personal_walls`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`personal_walls` (
+  `user_id` INT(11) NOT NULL,
+  `post_id` INT(11) NOT NULL,
+  PRIMARY KEY (`user_id`, `post_id`),
+  INDEX `post_id_idx` (`post_id` ASC),
+  CONSTRAINT `post_id0`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `mydb`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_id0`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
