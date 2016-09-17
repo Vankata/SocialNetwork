@@ -7,16 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.swing.text.DateFormatter;
-
-import com.mysql.jdbc.RowDataCursor;
 
 import user.User;
 import user.exceptions.UserException;
-import wall.Post
+
 
 public class UserDAO {
 
@@ -112,7 +106,7 @@ public class UserDAO {
 			*/
 			int user1_id = friend.getUserID();
 			
-					/*
+					
 			PreparedStatement pstmt2 = connection.prepareStatement(GET_USER_ID_BY_EMAIL_SQL);
 			pstmt2.setString(1, user.getEmail()); 
 			ResultSet rs1 = pstmt2.executeQuery();
