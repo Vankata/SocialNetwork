@@ -154,7 +154,7 @@ public class User implements IUser {
 		}
 		this.profilePicture = profilePicture;
 	}
-
+//DAO
 	public void addNewChat(User friend, Chat newChat) throws UserException {
 
 		if (newChat != null) {
@@ -212,7 +212,7 @@ public class User implements IUser {
 	 * }
 	 * 
 	 */
-//DAO dona
+//DAO done
 //	@Override
 	public void commentPost(Post post, String comment) throws PostException, UserException {
 
@@ -238,13 +238,6 @@ public class User implements IUser {
 		}
 	}
 
-	// MAHAME GO HAHAHAAHAHHAHAHAAH
-	/*
-	 * @Override public void reportPost(User friend, Post post) { // TODO
-	 * Auto-generated method stub
-	 * 
-	 * }
-	 */
 //DAO done
 //	@Override
 	public Photo postPicture(String pathToThePhoto, String text)
@@ -308,7 +301,7 @@ public class User implements IUser {
 			throw new UserException("Invalid user! ");
 		}
 	}
-
+//DAO
 //	@Override
 	public String removeFirend(User friend) throws UserException {
 
@@ -318,6 +311,7 @@ public class User implements IUser {
 
 		if (this.hasThisFriend(friend)) {
 			this.friends.remove(friend.getEmail());
+			new UserDAO().removeFriendDB(friend, this);
 			return friend.getFirstName() + " " + friend.getLastName() + " has been removed!";
 
 		} else {
@@ -355,8 +349,8 @@ public class User implements IUser {
 	public CommonWall getCommonWall() {
 		return commonWall;
 	}
-
-//	@Override
+//ÄÀÎ
+	@Override
 	public void deleteProfile(String password, String email) throws UserStatusException, UserException {
 
 		// Validation
@@ -379,7 +373,7 @@ public class User implements IUser {
 		return ((string != null) && (string.trim().length() > 0));
 	}
 
-//	@Override
+	@Override
 	public void logout() {
 		System.out.println(this.firstName + " " + this.lastName + "logged out");
 
@@ -396,12 +390,12 @@ public class User implements IUser {
 	public String getEmail() {
 		return email;
 	}
-
-//	@Override
+//DAO
+	@Override
 	public void sendMessage(User friend, String message) throws ChatException, MessageException, UserException {
 		if (this.hasThisFriend(friend)) {
 			Message message1 = this.getChatbyUser(friend).addMessage(message);
-			new ChatDAO().addNewMessage(friend.getChatbyUser(this), this.getUserID(), message1);
+			new ChatDAO().addNewMessage(friend.getChatbyUser(this), message1);
 			
 		} else {
 			throw new UserException("Invalid friend! ");
@@ -409,7 +403,7 @@ public class User implements IUser {
 
 	}
 
-	private Chat getChatbyUser(User friend) throws UserException {
+	public Chat getChatbyUser(User friend) throws UserException {
 		if (this.chats.containsKey(friend)) {
 			return this.chats.get(friend);
 		} else {
@@ -417,7 +411,7 @@ public class User implements IUser {
 		}
 	}
 
-//	@Override
+	@Override
 	public void reviewChat(User friend) throws UserException {
 		this.getChatbyUser(friend).printChat();
 	}

@@ -179,14 +179,27 @@ public class Demo {
 //		vankataUser.commentPost(post, "Tetrissssssss");
 		
 //		vankataUser.likePost(post);
-		
-		Guest mimi= new Guest();
-		 mimi.signIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^", "Mariq", "Ivanova");
-		 User mimiUser=mimi.logIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^");
-		 Photo photo=mimiUser.postPicture("src\\potos\\cat.jpg", "koteto");
+//		
+//		Guest mimi= new Guest();
+//		 mimi.signIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^", "Mariq", "Ivanova");
+//		 User mimiUser=mimi.logIn("vanqdjtwdtrwwr08d7@abv.bg", "Mimeto87^^");
+//		 Photo photo=mimiUser.postPicture("src\\potos\\cat.jpg", "koteto");
 //		 Post post1= mimiUser.post("A tova?!");
 //		mimiUser.deletePost(post1); 
-		 mimiUser.deletePost(photo);
+//		 mimiUser.deletePost(photo);
+		 Guest petq= new Guest();
+		 petq.signIn("petq11@abv.bg", "Petq23!", "Petq", "Petrova");
+		 User petqUser=petq.logIn("petq11@abv.bg", "Petq23!");
+		 Guest sonq= new Guest();
+		 sonq.signIn("sonq11@abv.bg", "Petq23!", "Sonq", "Petrova");
+		 User sonqUser=sonq.logIn("sonq11@abv.bg", "Petq23!");
+		 petqUser.addFriend(sonqUser);
+		 petqUser.sendMessage(sonqUser, "Zdrasti sonq!");
+		 petqUser.sendMessage(sonqUser, "Zdrasti sonq!");
+		 sonqUser.sendMessage(petqUser, "kp");
+		 petqUser.deleteProfile("Petq23!", "petq11@abv.bg");
+
+
 	}
 
 }
